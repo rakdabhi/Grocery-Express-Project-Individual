@@ -1,0 +1,148 @@
+ ------ Test Case: 0 ----
+Files drone_delivery_00_results.txt and drone_delivery_initial_00_results.txt are identical
+Elapsed time: 1.581s
+ ------ Test Case: 1 ----
+Files drone_delivery_01_results.txt and drone_delivery_initial_01_results.txt are identical
+Elapsed time: 1.926s
+ ------ Test Case: 2 ----
+Files drone_delivery_02_results.txt and drone_delivery_initial_02_results.txt are identical
+Elapsed time: 1.841s
+ ------ Test Case: 3 ----
+Files drone_delivery_03_results.txt and drone_delivery_initial_03_results.txt are identical
+Elapsed time: 1.825s
+ ------ Test Case: 4 ----
+Files drone_delivery_04_results.txt and drone_delivery_initial_04_results.txt are identical
+Elapsed time: 1.754s
+ ------ Test Case: 5 ----
+Files drone_delivery_05_results.txt and drone_delivery_initial_05_results.txt are identical
+Elapsed time: 1.893s
+ ------ Test Case: 6 ----
+Files drone_delivery_06_results.txt and drone_delivery_initial_06_results.txt are identical
+Elapsed time: 1.698s
+ ------ Test Case: 7 ----
+Files drone_delivery_07_results.txt and drone_delivery_initial_07_results.txt are identical
+Elapsed time: 1.711s
+ ------ Test Case: 8 ----
+Files drone_delivery_08_results.txt and drone_delivery_initial_08_results.txt are identical
+Elapsed time: 1.641s
+ ------ Test Case: 9 ----
+Files drone_delivery_09_results.txt and drone_delivery_initial_09_results.txt are identical
+Elapsed time: 1.829s
+ ------ Test Case: 10 ----
+File commands_10.txt does not exist.
+ ------ Test Case: 11 ----
+File commands_11.txt does not exist.
+ ------ Test Case: 12 ----
+File commands_12.txt does not exist.
+ ------ Test Case: 13 ----
+File commands_13.txt does not exist.
+ ------ Test Case: 14 ----
+File commands_14.txt does not exist.
+ ------ Test Case: 15 ----
+File commands_15.txt does not exist.
+ ------ Test Case: 16 ----
+File commands_16.txt does not exist.
+ ------ Test Case: 17 ----
+File commands_17.txt does not exist.
+ ------ Test Case: 18 ----
+File commands_18.txt does not exist.
+ ------ Test Case: 19 ----
+File commands_19.txt does not exist.
+ ------ Test Case: 20 ----
+Files drone_delivery_20_results.txt and drone_delivery_initial_20_results.txt are identical
+Elapsed time: 1.673s
+ ------ Test Case: 21 ----
+File commands_21.txt does not exist.
+ ------ Test Case: 22 ----
+File commands_22.txt does not exist.
+ ------ Test Case: 23 ----
+File commands_23.txt does not exist.
+ ------ Test Case: 24 ----
+File commands_24.txt does not exist.
+ ------ Test Case: 25 ----
+File commands_25.txt does not exist.
+ ------ Test Case: 26 ----
+File commands_26.txt does not exist.
+ ------ Test Case: 27 ----
+File commands_27.txt does not exist.
+ ------ Test Case: 28 ----
+File commands_28.txt does not exist.
+ ------ Test Case: 29 ----
+File commands_29.txt does not exist.
+ ------ Test Case: 30 ----
+Files drone_delivery_30_results.txt and drone_delivery_initial_30_results.txt are identical
+Elapsed time: 1.625s
+ ------ Test Case: 31 ----
+File commands_31.txt does not exist.
+ ------ Test Case: 32 ----
+File commands_32.txt does not exist.
+ ------ Test Case: 33 ----
+File commands_33.txt does not exist.
+ ------ Test Case: 34 ----
+File commands_34.txt does not exist.
+ ------ Test Case: 35 ----
+Files drone_delivery_35_results.txt and drone_delivery_initial_35_results.txt are identical
+Elapsed time: 2.098s
+ ------ Test Case: 36 ----
+File commands_36.txt does not exist.
+ ------ Test Case: 37 ----
+File commands_37.txt does not exist.
+ ------ Test Case: 38 ----
+File commands_38.txt does not exist.
+ ------ Test Case: 39 ----
+File commands_39.txt does not exist.
+ ------ Test Case: 40 ----
+Files drone_delivery_40_results.txt and drone_delivery_initial_40_results.txt are identical
+Elapsed time: 2.532s
+ ------ Test Case: 41 ----
+File commands_41.txt does not exist.
+ ------ Test Case: 42 ----
+File commands_42.txt does not exist.
+ ------ Test Case: 43 ----
+File commands_43.txt does not exist.
+ ------ Test Case: 44 ----
+File commands_44.txt does not exist.
+ ------ Test Case: 45 ----
+File commands_45.txt does not exist.
+ ------ Test Case: 46 ----
+File commands_46.txt does not exist.
+ ------ Test Case: 47 ----
+File commands_47.txt does not exist.
+ ------ Test Case: 48 ----
+File commands_48.txt does not exist.
+ ------ Test Case: 49 ----
+File commands_49.txt does not exist.
+ ------ Test Case: 50 ----
+Files drone_delivery_50_results.txt and drone_delivery_initial_50_results.txt are identical
+Elapsed time: 1.741s
+ ------ Test Case: 51 ----
+File commands_51.txt does not exist.
+ ------ Test Case: 52 ----
+File commands_52.txt does not exist.
+ ------ Test Case: 53 ----
+File commands_53.txt does not exist.
+ ------ Test Case: 54 ----
+File commands_54.txt does not exist.
+ ------ Test Case: 55 ----
+File commands_55.txt does not exist.
+ ------ Test Case: 56 ----
+File commands_56.txt does not exist.
+ ------ Test Case: 57 ----
+File commands_57.txt does not exist.
+ ------ Test Case: 58 ----
+File commands_58.txt does not exist.
+ ------ Test Case: 59 ----
+File commands_59.txt does not exist.
+ ------ Test Case: 60 ----
+File commands_60.txt does not exist.
+ ------ Test Case: 61 ----
+Files drone_delivery_61_results.txt and drone_delivery_initial_61_results.txt are identical
+Elapsed time: 1.686s
+ ------ Test Case: 62 ----
+File commands_62.txt does not exist.
+ ------ Test Case: 63 ----
+File commands_63.txt does not exist.
+ ------ Test Case: 64 ----
+File commands_64.txt does not exist.
+ ------ Test Case: 65 ----
+File commands_65.txt does not exist.
