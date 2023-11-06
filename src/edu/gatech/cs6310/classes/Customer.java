@@ -3,7 +3,7 @@ package edu.gatech.cs6310.classes;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Customer extends User implements Client {
+public class Customer extends User {
     private Map<String, Order> orders;
     private int rating;
     private int credit;
