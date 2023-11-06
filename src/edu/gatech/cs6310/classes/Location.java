@@ -8,6 +8,10 @@ public class Location implements Comparable<Location> {
         this.y = y;
     }
 
+    public Location(String x, String y) {
+        this(Integer.parseInt(x), Integer.parseInt(y));
+    }
+
     public int getX() {
         return this.x;
     }
@@ -16,6 +20,11 @@ public class Location implements Comparable<Location> {
         return this.y;
     }
 
+    /**
+     * Checks if another location is equal to this location
+     * @param o - Object/Location to compare this location to
+     * @return true if locations are equal, else false
+     */
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Location thatLocation)) {
@@ -24,6 +33,13 @@ public class Location implements Comparable<Location> {
         return this.x == thatLocation.getX() && this.y == thatLocation.getY();
     }
 
+    /**
+     * Compares this location to another given location to check if
+     * this location is greater than, less than, or equal to the other location
+     * @param thatLocation the object to be compared.
+     * @return 1 if this location is greater than, -1 if this location is less than,
+     * else 0 if this location is equal to
+     */
     @Override
     public int compareTo(Location thatLocation) {
         if (this.x != thatLocation.getX()) {
@@ -31,5 +47,10 @@ public class Location implements Comparable<Location> {
         } else {
             return Integer.compare(this.y, thatLocation.getY());
         }
+    }
+
+    @Override
+    public String toString() {
+        return "(" + this.getX() + "," + this.getY() + ")";
     }
 }
