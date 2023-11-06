@@ -3,30 +3,31 @@ package edu.gatech.cs6310.classes;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Store implements Client {
+public class Store {
     private String name;
     private int revenue;
     private Map<String, Item> items;
     private Map<String, Drone> drones;
     private Map<String, Order> orders;
-
+    private Location location;
     private int purchases;
     private int overloads;
     private int transfers;
 
-    public Store(String name, int revenue) {
+    public Store(String name, int revenue, int x, int y) {
         this.name = name;
         this.revenue = revenue;
         this.items = new TreeMap<String, Item>();
         this.drones = new TreeMap<String, Drone>();
         this.orders = new TreeMap<String, Order>();
+        this.location = new Location(x, y);
         this.purchases = 0;
         this.overloads = 0;
         this.transfers = 0;
     }
 
-    public Store(String name, String revenue) {
-        this(name, Integer.parseInt(revenue));
+    public Store(String name, String revenue, String x, String y) {
+        this(name, Integer.parseInt(revenue), Integer.parseInt(x), Integer.parseInt(y));
     }
 
     public String getStoreID() {
@@ -303,7 +304,8 @@ public class Store implements Client {
      */
     @Override
     public String toString() {
-        return "name:" + this.name
-            + ",revenue:" + this.revenue;
+        return "name:" + this.name +
+               ",revenue:" + this.revenue +
+               ",location:" + this.location.toString();
     }
 }
