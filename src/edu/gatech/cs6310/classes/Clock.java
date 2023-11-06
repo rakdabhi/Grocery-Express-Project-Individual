@@ -32,7 +32,7 @@ public class Clock {
      */
     public static int getLightOverTime(int startTime, int endTime) {
         if (startTime >= endTime) {
-            System.out.printf("ERROR: Start time %d is greater than or equal to end time %d!", startTime, endTime);
+            System.out.printf("ERROR:Start time %d is greater than or equal to end time %d!", startTime, endTime);
             return 0;
         }
         return (int) Math.round(daylightFunc(endTime) - daylightFunc(startTime));
