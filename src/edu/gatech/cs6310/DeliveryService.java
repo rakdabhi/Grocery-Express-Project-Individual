@@ -9,6 +9,8 @@ public class DeliveryService {
     private Map<String, Employee> employees = new TreeMap<String, Employee>();
     private Set<String> employeeUniques = new HashSet<String>();
     private Map<String, Customer> customers = new TreeMap<String, Customer>();
+    private Clock clock = new Clock();
+    private ServiceMap map = new ServiceMap();
 
     public void commandLoop() {
         Scanner commandLineInput = new Scanner(System.in);
@@ -27,7 +29,9 @@ public class DeliveryService {
                 switch (tokens[0]) {
                     case "make_store":
                         // System.out.println("store: " + tokens[1] + ", revenue: " + tokens[2]);
-                        make_store(tokens[1], tokens[2]);
+                        // xCoordinate = tokens[3], yCoordinate = tokens[4]
+                        make_store(tokens[1], tokens[2], tokens[3], tokens[4]);
+                        clock.incrementTime(1);
                         break;
 
                     case "display_stores":
@@ -140,14 +144,22 @@ public class DeliveryService {
      * Method to create a store if it doesn't exist
      * @param storeID - unique ID of store to create
      * @param revenue - revenue of store as an integer
+     * @param x - x coordinate of store
+     * @param y - y coordinate of store
      * @return true if store is created, else false
      */
-    private boolean make_store(String storeID, String revenue) {
+    private boolean make_store(String storeID, String revenue, String x, String y) {
         if (stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_already_exists");
             return false;
         }
-        Store store = new Store(storeID, revenue);
+        Location location = new Location(x, y);
+        if (map.locationExists(location)) {
+            System.out.println("ERROR:location_already_taken");
+            return false;
+        }
+        Store store = new Store(storeID, revenue, x, y);
+        map.addLocation(location, store);
         stores.put(store.getStoreID(), store);
         System.out.println("OK:change_completed");
         return true;
