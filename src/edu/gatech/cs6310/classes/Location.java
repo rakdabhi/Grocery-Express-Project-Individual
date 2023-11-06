@@ -49,6 +49,10 @@ public class Location implements Comparable<Location> {
         }
     }
 
+    /**
+     * Function returning this location in String format
+     * @return Location written in String format as "(x,y)"
+     */
     @Override
     public String toString() {
         return "(" + this.getX() + "," + this.getY() + ")";
