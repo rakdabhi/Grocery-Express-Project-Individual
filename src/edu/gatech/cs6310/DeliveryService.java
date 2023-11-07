@@ -37,6 +37,7 @@ public class DeliveryService {
                     case "display_stores":
                         // System.out.println("no parameters needed");
                         display_stores();
+                        clock.incrementTime(1);
                         break;
 
                     case "sell_item":
@@ -77,7 +78,8 @@ public class DeliveryService {
                     case "make_customer":
                         // System.out.print("account: " + tokens[1] + ", first_name: " + tokens[2] + ", last_name: " + tokens[3]);
                         // System.out.println(", phone: " + tokens[4] + ", rating: " + tokens[5] + ", credit: " + tokens[6]);
-                        make_customer(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]);
+                        // xCoordinate = tokens[7], yCoordinate = tokens[8]
+                        make_customer(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7], tokens[8]);
                         break;
 
                     case "display_customers":
@@ -158,7 +160,7 @@ public class DeliveryService {
             System.out.println("ERROR:location_already_taken");
             return false;
         }
-        Store store = new Store(storeID, revenue, x, y);
+        Store store = new Store(storeID, revenue, location);
         map.addLocation(location, store);
         stores.put(store.getStoreID(), store);
         System.out.println("OK:change_completed");
@@ -254,9 +256,13 @@ public class DeliveryService {
             System.out.println("ERROR:store_identifier_does_not_exist");
             return false;
         }
-        boolean storeCreated = stores.get(storeID).addDrone(droneID, weightCapacity,tripsCapacity);
-        if (storeCreated) System.out.println("OK:change_completed");
-        return storeCreated;
+        Store store = stores.get(storeID);
+        boolean droneCreated = store.addDrone(droneID, weightCapacity,tripsCapacity);
+        if (droneCreated) {
+            map.addLocation(store.getDrone(droneID).getLocation(), store.getDrone(droneID));
+            System.out.println("OK:change_completed");
+        }
+        return droneCreated;
     }
 
     /**
@@ -316,15 +322,24 @@ public class DeliveryService {
      * @param phone - phone number of customer
      * @param rating - rating of customer
      * @param credit - credit/money that customer has available to spend on groceries
+     * @param x - x coordinate of customer
+     * @param y - y coordinate of customer
      * @return true if customer is created, else false
      */
     private boolean make_customer(String accountID, String firstName, String lastName,
-                                  String phone, String rating, String credit) {
+                                  String phone, String rating, String credit,
+                                  String x, String y) {
         if (customers.containsKey(accountID)) {
             System.out.println("ERROR:customer_identifier_already_exists");
             return false;
         }
-        Customer customer = new Customer(accountID, firstName, lastName, phone, rating, credit);
+        Location location = new Location(x, y);
+        if (map.locationExists(location)) {
+            System.out.println("ERROR:location_already_taken");
+            return false;
+        }
+        Customer customer = new Customer(accountID, firstName, lastName, phone, rating, credit, location);
+        map.addLocation(location, customer);
         customers.put(customer.getAccountID(), customer);
         System.out.println("OK:change_completed");
         return true;

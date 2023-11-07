@@ -14,20 +14,20 @@ public class Store {
     private int overloads;
     private int transfers;
 
-    public Store(String name, int revenue, int x, int y) {
+    public Store(String name, int revenue, Location location) {
         this.name = name;
         this.revenue = revenue;
         this.items = new TreeMap<String, Item>();
         this.drones = new TreeMap<String, Drone>();
         this.orders = new TreeMap<String, Order>();
-        this.location = new Location(x, y);
+        this.location = location;
         this.purchases = 0;
         this.overloads = 0;
         this.transfers = 0;
     }
 
-    public Store(String name, String revenue, String x, String y) {
-        this(name, Integer.parseInt(revenue), Integer.parseInt(x), Integer.parseInt(y));
+    public Store(String name, String revenue, Location location) {
+        this(name, Integer.parseInt(revenue), location);
     }
 
     public String getStoreID() {
@@ -52,6 +52,10 @@ public class Store {
 
     public Item getItem(String itemID) {
         return items.get(itemID);
+    }
+
+    public Location getLocation() {
+        return this.location;
     }
 
     /**
@@ -103,7 +107,7 @@ public class Store {
             System.out.println("ERROR:drone_identifier_already_exists");
             return false;
         }
-        Drone drone = new Drone(droneID, weightCapacity,tripsCapacity);
+        Drone drone = new Drone(droneID, weightCapacity,tripsCapacity, this.location);
         drones.put(drone.getDroneID(), drone);
         return true;
     }

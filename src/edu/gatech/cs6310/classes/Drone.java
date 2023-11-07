@@ -10,20 +10,22 @@ public class Drone {
     private int remainingTrips;
     private DronePilot pilot;
     private Map<String, Order> orders;
+    private Location location;
     private int overloads;
 
-    public Drone(String droneID, int weightCapacity, int remainingTrips) {
+    public Drone(String droneID, int weightCapacity, int remainingTrips, Location location) {
         this.droneID = droneID;
         this.weightCapacity = weightCapacity;
         this.remainingWeight = weightCapacity;
         this.remainingTrips = remainingTrips;
         this.pilot = null;
         this.orders = new TreeMap<String, Order>();
+        this.location = location;
         this.overloads = 0;
     }
 
-    public Drone(String droneID, String weightCapacity, String remainingTrips) {
-        this(droneID, Integer.parseInt(weightCapacity), Integer.parseInt(remainingTrips));
+    public Drone(String droneID, String weightCapacity, String remainingTrips, Location location) {
+        this(droneID, Integer.parseInt(weightCapacity), Integer.parseInt(remainingTrips), location);
     }
 
     public String getDroneID() {
@@ -56,6 +58,10 @@ public class Drone {
 
     public Order getOrder(String orderID) {
         return orders.get(orderID);
+    }
+
+    public Location getLocation() {
+        return this.location;
     }
 
     public int getOverloads() {
