@@ -221,6 +221,8 @@ public class Drone {
             retString += pilotField;
         }
 
+        retString = retString + ",location:" + this.location.toString();
+
         return retString;
     }
 }
