@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ServiceMap {
-    private static ServiceMap map = null;
+    private static ServiceMap map;
     private Map<Location, Customer> customerMap;
     private Map<Location, Store> storeMap;
     private Map<Location, Drone> droneMap;
