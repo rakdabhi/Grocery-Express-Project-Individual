@@ -10,7 +10,7 @@ public class DeliveryService {
     private Set<String> employeeUniques = new HashSet<String>();
     private Map<String, Customer> customers = new TreeMap<String, Customer>();
     private Clock clock = new Clock();
-    private ServiceMap map = new ServiceMap();
+    private ServiceMap map = ServiceMap.getInstance();
 
     public void commandLoop() {
         Scanner commandLineInput = new Scanner(System.in);

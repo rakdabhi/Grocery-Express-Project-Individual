@@ -4,14 +4,29 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ServiceMap {
+    private static ServiceMap map = null;
     private Map<Location, Customer> customerMap;
     private Map<Location, Store> storeMap;
     private Map<Location, Drone> droneMap;
 
-    public ServiceMap() {
+    /**
+     * Private constructor to construct a Singleton ServiceMap instance
+     */
+    private ServiceMap() {
         this.customerMap = new TreeMap<Location, Customer>();
         this.storeMap = new TreeMap<Location, Store>();
         this.droneMap = new TreeMap<Location, Drone>();
+    }
+
+    /**
+     * Static method to create and return a Singleton ServiceMap instance
+     * @return a Singleton ServiceMap instance
+     */
+    public static synchronized ServiceMap getInstance() {
+        if (map == null) {
+            map = new ServiceMap();
+        }
+        return map;
     }
 
     /**
