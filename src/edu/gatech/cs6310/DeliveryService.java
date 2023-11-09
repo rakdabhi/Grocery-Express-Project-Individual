@@ -12,11 +12,27 @@ public class DeliveryService {
     private Clock clock = Clock.getInstance();
     private ServiceMap map = ServiceMap.getInstance();
 
+    // a map of how much time it takes to execute each function
+    private Map<String, Integer> timeMap = new HashMap<String, Integer>() {{
+        put("make_store", 2);
+        put("sell_item", 3);
+        put("make_pilot", 3);
+        put("make_drone", 3);
+        put("fly_drone", 4);
+        put("make_customer", 2);
+        put("start_order", 5);
+        put("request_item", 7);
+        put("purchase_order", 5);
+        put("cancel_order", 3);
+        put("transfer_order", 6);
+    }};
+
     public void commandLoop() {
         Scanner commandLineInput = new Scanner(System.in);
         String wholeInputLine;
         String[] tokens;
         final String DELIMITER = ",";
+        boolean isSuccessful = false;
 
         label:
         while (true) {
@@ -30,7 +46,7 @@ public class DeliveryService {
                     case "make_store":
                         // System.out.println("store: " + tokens[1] + ", revenue: " + tokens[2]);
                         // xCoordinate = tokens[3], yCoordinate = tokens[4]
-                        make_store(tokens[1], tokens[2], tokens[3], tokens[4]);
+                        isSuccessful = make_store(tokens[1], tokens[2], tokens[3], tokens[4]);
                         break;
 
                     case "display_stores":
@@ -40,7 +56,7 @@ public class DeliveryService {
 
                     case "sell_item":
                         // System.out.println("store: " + tokens[1] + ", item: " + tokens[2] + ", weight: " + tokens[3]);
-                        sell_item(tokens[1], tokens[2], tokens[3]);
+                        isSuccessful = sell_item(tokens[1], tokens[2], tokens[3]);
                         break;
 
                     case "display_items":
@@ -50,7 +66,7 @@ public class DeliveryService {
                     case "make_pilot":
                         // System.out.print("account: " + tokens[1] + ", first_name: " + tokens[2] + ", last_name: " + tokens[3]);
                         // System.out.println(", phone: " + tokens[4] + ", tax: " + tokens[5] + ", license: " + tokens[6] + ", experience: " + tokens[7]);
-                        make_pilot(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7]);
+                        isSuccessful = make_pilot(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7]);
                         break;
 
                     case "display_pilots":
@@ -60,7 +76,7 @@ public class DeliveryService {
 
                     case "make_drone":
                         // System.out.println("store: " + tokens[1] + ", drone: " + tokens[2] + ", capacity: " + tokens[3] + ", fuel: " + tokens[4]);
-                        make_drone(tokens[1], tokens[2], tokens[3], tokens[4]);
+                        isSuccessful = make_drone(tokens[1], tokens[2], tokens[3], tokens[4]);
                         break;
 
                     case "display_drones":
@@ -70,14 +86,14 @@ public class DeliveryService {
 
                     case "fly_drone":
                         // System.out.println("store: " + tokens[1] + ", drone: " + tokens[2] + ", pilot: " + tokens[3]);
-                        fly_drone(tokens[1], tokens[2], tokens[3]);
+                        isSuccessful = fly_drone(tokens[1], tokens[2], tokens[3]);
                         break;
 
                     case "make_customer":
                         // System.out.print("account: " + tokens[1] + ", first_name: " + tokens[2] + ", last_name: " + tokens[3]);
                         // System.out.println(", phone: " + tokens[4] + ", rating: " + tokens[5] + ", credit: " + tokens[6]);
                         // xCoordinate = tokens[7], yCoordinate = tokens[8]
-                        make_customer(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7], tokens[8]);
+                        isSuccessful = make_customer(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7], tokens[8]);
                         break;
 
                     case "display_customers":
@@ -87,7 +103,7 @@ public class DeliveryService {
 
                     case "start_order":
                         // System.out.println("store: " + tokens[1] + ", order: " + tokens[2] + ", drone: " + tokens[3] + ", customer: " + tokens[4]);
-                        start_order(tokens[1], tokens[2], tokens[3], tokens[4]);
+                        isSuccessful = start_order(tokens[1], tokens[2], tokens[3], tokens[4]);
                         break;
 
                     case "display_orders":
@@ -97,22 +113,22 @@ public class DeliveryService {
 
                     case "request_item":
                         // System.out.println("store: " + tokens[1] + ", order: " + tokens[2] + ", item: " + tokens[3] + ", quantity: " + tokens[4] + ", unit_price: " + tokens[5]);
-                        request_item(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]);
+                        isSuccessful = request_item(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]);
                         break;
 
                     case "purchase_order":
                         // System.out.println("store: " + tokens[1] + ", order: " + tokens[2]);
-                        purchase_order(tokens[1], tokens[2]);
+                        isSuccessful = purchase_order(tokens[1], tokens[2]);
                         break;
 
                     case "cancel_order":
                         // System.out.println("store: " + tokens[1] + ", order: " + tokens[2]);
-                        cancel_order(tokens[1], tokens[2]);
+                        isSuccessful = cancel_order(tokens[1], tokens[2]);
                         break;
 
                     case "transfer_order":
                         // System.out.println("store: " + tokens[1] + ", order: " + tokens[2] + ", new_drone: " + tokens[3]);
-                        transfer_order(tokens[1], tokens[2], tokens[3]);
+                        isSuccessful = transfer_order(tokens[1], tokens[2], tokens[3]);
                         break;
 
                     case "display_efficiency":
@@ -134,6 +150,16 @@ public class DeliveryService {
                         }
                         break;
                 }
+
+                // Increments time on the clock based on the command and whether it was successful
+                if (timeMap.containsKey(tokens[0])) {
+                    if (!isSuccessful) {
+                        clock.incrementTime(1);
+                    } else {
+                        clock.incrementTime(timeMap.get(tokens[0]));
+                    }
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println();
@@ -286,19 +312,20 @@ public class DeliveryService {
      * @param storeID - unique ID of store where drone works
      * @param droneID - unique ID of the drone
      * @param pilotID - unique identifier for pilot
+     * @return true if pilot is successfully assigned to control a given drone
      */
-    private void fly_drone(String storeID, String droneID, String pilotID) {
+    private boolean fly_drone(String storeID, String droneID, String pilotID) {
         if (!stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_does_not_exist");
-            return;
+            return false;
         }
         if (!stores.get(storeID).containsDrone(droneID)) {
             System.out.println("ERROR:drone_identifier_does_not_exist");
-            return;
+            return false;
         }
         if (!employees.containsKey(pilotID)) {
             System.out.println("ERROR:pilot_identifier_does_not_exist");
-            return;
+            return false;
         }
 
         DronePilot pilot = (DronePilot) employees.get(pilotID);
@@ -315,7 +342,9 @@ public class DeliveryService {
             pilot.setDrone(drone);
             drone.setPilot(pilot);
             System.out.println("OK:change_completed");
+            return true;
         }
+        return false;
     }
 
     /**
