@@ -31,7 +31,7 @@ public class DeliveryService {
                         // System.out.println("store: " + tokens[1] + ", revenue: " + tokens[2]);
                         // xCoordinate = tokens[3], yCoordinate = tokens[4]
                         make_store(tokens[1], tokens[2], tokens[3], tokens[4]);
-                        clock.incrementTime(1);
+                        clock.incrementTime(2);
                         break;
 
                     case "display_stores":
@@ -47,6 +47,7 @@ public class DeliveryService {
 
                     case "display_items":
                         display_items(tokens[1]);
+                        clock.incrementTime(1);
                         break;
 
                     case "make_pilot":
@@ -58,6 +59,7 @@ public class DeliveryService {
                     case "display_pilots":
                         // System.out.println("no parameters needed");
                         display_pilots();
+                        clock.incrementTime(1);
                         break;
 
                     case "make_drone":
@@ -68,6 +70,7 @@ public class DeliveryService {
                     case "display_drones":
                         // System.out.println("store: " + tokens[1]);
                         display_drones(tokens[1]);
+                        clock.incrementTime(1);
                         break;
 
                     case "fly_drone":
@@ -85,6 +88,7 @@ public class DeliveryService {
                     case "display_customers":
                         // System.out.println("no parameters needed");
                         display_customers();
+                        clock.incrementTime(1);
                         break;
 
                     case "start_order":
@@ -95,6 +99,7 @@ public class DeliveryService {
                     case "display_orders":
                         // System.out.println("store: " + tokens[1]);
                         display_orders(tokens[1]);
+                        clock.incrementTime(1);
                         break;
 
                     case "request_item":
@@ -120,6 +125,7 @@ public class DeliveryService {
                     case "display_efficiency":
                         // System.out.println("no parameters needed");
                         display_efficiency();
+                        clock.incrementTime(1);
                         break;
 
                     case "stop":
@@ -127,7 +133,7 @@ public class DeliveryService {
                         break label;
 
                     default:
-                        if (!tokens[0].substring(0,2).equals("//")) {
+                        if (!tokens[0].startsWith("//")) {
                             System.out.println("command " + tokens[0] + " NOT acknowledged");
                         }
                         break;
