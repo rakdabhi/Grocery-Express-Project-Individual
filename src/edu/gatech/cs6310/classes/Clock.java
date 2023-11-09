@@ -1,10 +1,25 @@
 package edu.gatech.cs6310.classes;
 
 public class Clock {
+    private static Clock clock;
     private int time;
 
-    public Clock() {
+    /**
+     * Private constructor to construct a Singleton Clock instance
+     */
+    private Clock() {
         this.time = 0;
+    }
+
+    /**
+     * Static method to create and return a Singleton Clock instance
+     * @return a Singleton Clock instance
+     */
+    public static synchronized Clock getInstance() {
+        if (clock == null) {
+            clock = new Clock();
+        }
+        return clock;
     }
 
     public int getTime() {

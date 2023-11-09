@@ -9,7 +9,7 @@ public class DeliveryService {
     private Map<String, Employee> employees = new TreeMap<String, Employee>();
     private Set<String> employeeUniques = new HashSet<String>();
     private Map<String, Customer> customers = new TreeMap<String, Customer>();
-    private Clock clock = new Clock();
+    private Clock clock = Clock.getInstance();
     private ServiceMap map = ServiceMap.getInstance();
 
     public void commandLoop() {
