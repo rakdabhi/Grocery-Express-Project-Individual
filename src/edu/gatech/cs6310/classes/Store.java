@@ -91,6 +91,7 @@ public class Store {
     public void displayItems() {
         for (Map.Entry<String, Item> itemEntry : items.entrySet()) {
             System.out.println(itemEntry.getValue().toString());
+            Clock.getInstance().incrementTime(1);
         }
         System.out.println("OK:display_completed");
     }
@@ -129,6 +130,7 @@ public class Store {
     public void displayDrones() {
         for (Map.Entry<String, Drone> droneEntry : drones.entrySet()) {
             System.out.println(droneEntry.getValue().toString());
+            Clock.getInstance().incrementTime(1);
         }
         System.out.println("OK:display_completed");
     }
@@ -253,6 +255,7 @@ public class Store {
     public void displayOrders() {
         for (Map.Entry<String, Order> orderEntry : orders.entrySet()) {
             System.out.println(orderEntry.getValue().toString());
+            Clock.getInstance().incrementTime(1);
         }
         System.out.println("OK:display_completed");
     }

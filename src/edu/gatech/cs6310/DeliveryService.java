@@ -31,13 +31,11 @@ public class DeliveryService {
                         // System.out.println("store: " + tokens[1] + ", revenue: " + tokens[2]);
                         // xCoordinate = tokens[3], yCoordinate = tokens[4]
                         make_store(tokens[1], tokens[2], tokens[3], tokens[4]);
-                        clock.incrementTime(2);
                         break;
 
                     case "display_stores":
                         // System.out.println("no parameters needed");
                         display_stores();
-                        clock.incrementTime(1);
                         break;
 
                     case "sell_item":
@@ -47,7 +45,6 @@ public class DeliveryService {
 
                     case "display_items":
                         display_items(tokens[1]);
-                        clock.incrementTime(1);
                         break;
 
                     case "make_pilot":
@@ -59,7 +56,6 @@ public class DeliveryService {
                     case "display_pilots":
                         // System.out.println("no parameters needed");
                         display_pilots();
-                        clock.incrementTime(1);
                         break;
 
                     case "make_drone":
@@ -70,7 +66,6 @@ public class DeliveryService {
                     case "display_drones":
                         // System.out.println("store: " + tokens[1]);
                         display_drones(tokens[1]);
-                        clock.incrementTime(1);
                         break;
 
                     case "fly_drone":
@@ -88,7 +83,6 @@ public class DeliveryService {
                     case "display_customers":
                         // System.out.println("no parameters needed");
                         display_customers();
-                        clock.incrementTime(1);
                         break;
 
                     case "start_order":
@@ -99,7 +93,6 @@ public class DeliveryService {
                     case "display_orders":
                         // System.out.println("store: " + tokens[1]);
                         display_orders(tokens[1]);
-                        clock.incrementTime(1);
                         break;
 
                     case "request_item":
@@ -125,11 +118,9 @@ public class DeliveryService {
                     case "display_efficiency":
                         // System.out.println("no parameters needed");
                         display_efficiency();
-                        clock.incrementTime(1);
                         break;
 
                     case "display_time":
-                        clock.incrementTime(1);
                         display_time();
                         break;
 
@@ -184,6 +175,7 @@ public class DeliveryService {
     private void display_stores() {
         for (Map.Entry<String, Store> storeEntry : stores.entrySet()) {
             System.out.println(storeEntry.getValue().toString());
+            clock.incrementTime(1);
         }
         System.out.println("OK:display_completed");
     }
@@ -250,6 +242,7 @@ public class DeliveryService {
     private void display_pilots() {
         for (Map.Entry<String, Employee> employeeEntry : employees.entrySet()) {
             System.out.println(employeeEntry.getValue().toString());
+            clock.incrementTime(1);
         }
         System.out.println("OK:display_completed");
     }
@@ -362,6 +355,7 @@ public class DeliveryService {
     private void display_customers() {
         for (Map.Entry<String, Customer> customerEntry : customers.entrySet()) {
             System.out.println(customerEntry.getValue().toString());
+            clock.incrementTime(1);
         }
         System.out.println("OK:display_completed");
     }
@@ -511,6 +505,7 @@ public class DeliveryService {
     private void display_efficiency() {
         for (Map.Entry<String, Store> storeEntry : stores.entrySet()) {
             System.out.println(storeEntry.getValue().getEfficiency());
+            clock.incrementTime(1);
         }
         System.out.println("OK:display_completed");
     }
@@ -519,6 +514,7 @@ public class DeliveryService {
      * Displays the current time of the system
      */
     private void display_time() {
+        clock.incrementTime(1);
         System.out.println(clock.toString());
     }
 }
