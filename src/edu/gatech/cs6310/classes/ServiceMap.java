@@ -75,6 +75,27 @@ public class ServiceMap {
     }
 
     /**
+     * Computes the distance between two locations using the Pythagorean Theorem
+     * @param startLocation - start location
+     * @param endLocation - end location
+     * @return distance between two locations as an int
+     */
+    public int computeDistance(Location startLocation, Location endLocation) {
+        if (!locationExists(startLocation)) {
+            System.out.println("ERROR:start_location_does_not_exist");
+            return 0;
+        }
+        if (!locationExists(endLocation)) {
+            System.out.println("ERROR:end_location_does_not_exist");
+            return 0;
+        }
+        return (int) Math.sqrt(
+                Math.pow((endLocation.getX() - startLocation.getX()), 2) +
+                Math.pow((endLocation.getY() - startLocation.getY()), 2)
+        );
+    }
+
+    /**
      * Determines whether a customer or store already exists at the given location
      * @param location - location to check whether a customer or store is occupying that place
      * @return true if a customer or store exists at the given location, else false
