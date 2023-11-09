@@ -128,6 +128,11 @@ public class DeliveryService {
                         clock.incrementTime(1);
                         break;
 
+                    case "display_time":
+                        clock.incrementTime(1);
+                        display_time();
+                        break;
+
                     case "stop":
                         System.out.println("stop acknowledged");
                         break label;
@@ -508,5 +513,12 @@ public class DeliveryService {
             System.out.println(storeEntry.getValue().getEfficiency());
         }
         System.out.println("OK:display_completed");
+    }
+
+    /**
+     * Displays the current time of the system
+     */
+    private void display_time() {
+        System.out.println(clock.toString());
     }
 }

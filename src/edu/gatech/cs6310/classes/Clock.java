@@ -22,10 +22,26 @@ public class Clock {
         return clock;
     }
 
+    /**
+     * Gets the current time
+     * @return the current time
+     */
     public int getTime() {
         return this.time;
     }
 
+    /**
+     * Converts the current time into a Day-Hour-Minute format
+     * @return the current time in Day-Hour-Minute format
+     */
+    public String getTimeDateFormat() {
+        return this.getTimeDateFormat(this.time);
+    }
+
+    /**
+     * Increments the clock based on a delta (change in time)
+     * @param delta - amount of time to increment
+     */
     public void incrementTime(int delta) {
         this.time += delta;
     }
@@ -79,5 +95,31 @@ public class Clock {
             light = getLightOverTime(startTime, endTime);
         }
         return endTime;
+    }
+
+    /**
+     * Converts a given date into a Day-Hour-Minute format
+     * @param date - the date to convert
+     * @return a String representing the date in Day-Hour-Minute format
+     */
+    public String getTimeDateFormat(int date) {
+        if (date < 0) {
+            System.out.printf("ERROR:date_%d_is_invalid", date);
+            return "date_is_invalid";
+        }
+        int days = date / 1440;
+        int hours = (date % 1440) / 60;
+        int minutes = (date % 1440) % 60;
+        return String.format("Day%s_%sH:%sM", days, hours, minutes);
+    }
+
+    /**
+     * Function returning this current time in String format
+     * @return time written in String format
+     */
+    @Override
+    public String toString() {
+        return "absolute_time:" + this.time +
+               ",relative_time:" + this.getTimeDateFormat();
     }
 }
