@@ -64,4 +64,20 @@ public class Clock {
     private static double daylightFunc(int x) {
         return -(518400/Math.PI) * Math.sin((Math.PI/720) * x) + (720 * x);
     }
+
+    /**
+     * Calculates the endTime based on a given startTime and a required minimum amount of light needed
+     * @param minLightNeeded - minimum amount of light needed for a drone to cover a certain distance
+     * @param startTime - time that drone will start charging in minutes
+     * @return the end time of a timeframe in minutes given a start time and an amount of light needed
+     */
+    public static int getEndTime(int minLightNeeded,int startTime) {
+        int endTime = startTime;
+        int light = 0;
+        while (light < minLightNeeded) {
+            endTime++;
+            light = getLightOverTime(startTime, endTime);
+        }
+        return endTime;
+    }
 }
