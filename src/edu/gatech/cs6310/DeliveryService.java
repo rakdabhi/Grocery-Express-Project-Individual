@@ -12,7 +12,7 @@ public class DeliveryService {
     private Clock clock = Clock.getInstance();
     private ServiceMap map = ServiceMap.getInstance();
 
-    // a map of how much time it takes to execute each function
+    // a map of how much time it takes to execute each function based on the number of error checks it does
     private Map<String, Integer> timeMap = new HashMap<String, Integer>() {{
         put("make_store", 2);
         put("sell_item", 3);
