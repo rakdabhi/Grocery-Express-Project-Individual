@@ -13,7 +13,7 @@ public class DeliveryService {
     private ServiceMap map = ServiceMap.getInstance();
 
     // a map of how much time it takes to execute each function based on the number of error checks it does
-    private Map<String, Integer> timeMap = new HashMap<String, Integer>() {{
+    private Map<String, Integer> commandTimeMap = new HashMap<String, Integer>() {{
         put("make_store", 2);
         put("sell_item", 3);
         put("make_pilot", 3);
@@ -152,11 +152,11 @@ public class DeliveryService {
                 }
 
                 // Increments time on the clock based on the command and whether it was successful
-                if (timeMap.containsKey(tokens[0])) {
+                if (commandTimeMap.containsKey(tokens[0])) {
                     if (!isSuccessful) {
                         clock.incrementTime(1);
                     } else {
-                        clock.incrementTime(timeMap.get(tokens[0]));
+                        clock.incrementTime(commandTimeMap.get(tokens[0]));
                     }
                 }
 
