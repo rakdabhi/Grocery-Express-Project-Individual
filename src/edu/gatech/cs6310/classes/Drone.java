@@ -179,10 +179,17 @@ public class Drone {
         }
 
         updateCharge();
+        int deliveryTime = Clock.getInstance().getTime();
 
         double distance = ServiceMap.getInstance().computeDistance(this.location, order.getDestination());
-        travelDistance(distance);
 
+        // sets a reasonable delivery time to 1.5 * delivery time (time to cover distance at default speed without factoring sitting idle to recharge)
+        order.setReasonableDeliveryTime((int) (15 * distance));
+
+        travelDistance(distance); // drone travels the distance to delivery order
+
+        deliveryTime = Clock.getInstance().getTime() - deliveryTime; // tracks delivery time of order
+        order.setActualDeliveryTime(deliveryTime); // sets delivery time of order
         this.lastChargeUpdate = Clock.getInstance().getTime();
         this.location = order.getDestination();
         this.pilot.incrementExperience();
@@ -211,7 +218,8 @@ public class Drone {
             int minLightNeeded = requiredFuel - this.remainingFuel;
             int startTime = Clock.getInstance().getTime();
             int endTime = Clock.getEndTime(minLightNeeded, startTime);
-            Clock.getInstance().incrementTime(endTime - startTime); // time to charge battery just enough to cover distance
+            int idleTime = (int) Math.max((double) minLightNeeded / this.refuelRate, endTime - startTime);
+            Clock.getInstance().incrementTime(idleTime); // time to charge battery just enough to cover distance
             this.remainingFuel = requiredFuel; // battery is full enough to cover distance
             travelDistance(distance);
 
@@ -220,7 +228,8 @@ public class Drone {
             int fuelForFullCharge = this.fuelCapacity - this.remainingFuel;
             int startTime = Clock.getInstance().getTime();
             int endTime = Clock.getEndTime(fuelForFullCharge, startTime);
-            Clock.getInstance().incrementTime(endTime - startTime); // Time to fully charge battery
+            int idleTime = (int) Math.max((double) fuelForFullCharge / this.refuelRate, endTime - startTime);
+            Clock.getInstance().incrementTime(idleTime); // Time to fully charge battery
             this.remainingFuel = this.fuelCapacity; // battery is now fully charged
 
             double fullChargeRange = (double)this.remainingFuel / this.fuelConsumptionRate; // max distance drone can cover on full charge
