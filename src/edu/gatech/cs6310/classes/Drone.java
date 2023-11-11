@@ -12,7 +12,7 @@ public class Drone {
     private int overloads;
 
     /*
-     * NOTE: Charge has units 'c', Time has minute units 'min', and Distance has units 'd'
+     * NOTE: Charge has units 'c', Time has minute units 'min', and Distance has units 'd' (you can think of 1d as 1 mile or 1 kilometer)
      */
     private int fuelCapacity; // maximum fuel capacity of drone in units of charge (c)
     private int remainingFuel; // the remaining charge that this drone has in units of charge (c)
@@ -173,31 +173,61 @@ public class Drone {
             System.out.println("ERROR:drone_needs_pilot");
             return false;
         }
-        if (this.fuelCapacity <= 0) {
-            System.out.println("ERROR:drone_needs_fuel");
+        if (!ServiceMap.getInstance().locationExists(order.getDestination())) {
+            System.out.println("ERROR:destination_location_does_not_exist");
             return false;
         }
-        boolean isDelivered = this.decrementFuel();
-        if (isDelivered) {
-            this.pilot.incrementExperience();
-            this.increaseRemainingWeightOrder(order.getOrderWeight());
-            orders.remove(order.getOrderID());
-            this.calculateOverloads();
-        }
-        return isDelivered && !orders.containsKey(order.getOrderID());
+
+        updateCharge();
+
+        double distance = ServiceMap.getInstance().computeDistance(this.location, order.getDestination());
+        travelDistance(distance);
+
+        this.lastChargeUpdate = Clock.getInstance().getTime();
+        this.location = order.getDestination();
+        this.pilot.incrementExperience();
+        this.increaseRemainingWeightOrder(order.getOrderWeight());
+        orders.remove(order.getOrderID());
+        this.calculateOverloads();
+
+        return !orders.containsKey(order.getOrderID());
     }
 
     /**
-     * Decrements the remaining number of trips that this drone can take after delivering an order
-     * @return true if remaining trips is decremented, else false
+     * Method to move this drone over a certain distance and update time along the way
+     * @param distance - distance that drone has to travel
      */
-    private boolean decrementFuel() {
-        if (this.fuelCapacity <= 0) {
-            System.out.println("ERROR:drone_needs_fuel");
-            return false;
+    private void travelDistance(double distance) {
+        int requiredFuel = (int) Math.round(distance * this.fuelConsumptionRate);
+
+        // When the drone has enough remaining fuel to cover the distance
+        if (this.remainingFuel >= requiredFuel) {
+            this.remainingFuel -= requiredFuel;
+            Clock.getInstance().incrementTime((int) (10 * distance)); // Time it takes to cover distance required
+
+        // When the drone can wait at its current place until it's battery has filled enough to cover the distance
+        } else if (this.fuelCapacity - this.remainingFuel >= requiredFuel) {
+            // Drone waits in-place to charge battery
+            int minLightNeeded = requiredFuel - this.remainingFuel;
+            int startTime = Clock.getInstance().getTime();
+            int endTime = Clock.getEndTime(minLightNeeded, startTime);
+            Clock.getInstance().incrementTime(endTime - startTime); // time to charge battery just enough to cover distance
+            this.remainingFuel = requiredFuel; // battery is full enough to cover distance
+            travelDistance(distance);
+
+        // When the drone can't cover the distance even on a full charge (i.e. if (this.fuelCapacity - this.remainingFuel < requiredFuel))
+        } else {
+            int fuelForFullCharge = this.fuelCapacity - this.remainingFuel;
+            int startTime = Clock.getInstance().getTime();
+            int endTime = Clock.getEndTime(fuelForFullCharge, startTime);
+            Clock.getInstance().incrementTime(endTime - startTime); // Time to fully charge battery
+            this.remainingFuel = this.fuelCapacity; // battery is now fully charged
+
+            double fullChargeRange = (double)this.remainingFuel / this.fuelConsumptionRate; // max distance drone can cover on full charge
+            Clock.getInstance().incrementTime((int) (10 * fullChargeRange)); // time it takes to cover max distance
+            this.remainingFuel = 0; // battery is depleted
+            travelDistance(distance - fullChargeRange);
         }
-        this.fuelCapacity -= 1;
-        return true;
     }
 
     /**
@@ -221,7 +251,7 @@ public class Drone {
     private void updateCharge() {
         int currTime = Clock.getInstance().getTime();
         int sunlightAmount = Clock.getLightOverTime(this.lastChargeUpdate, currTime);
-        this.remainingFuel = Math.min(this.fuelCapacity,
+        this.remainingFuel = Math.min(this.fuelCapacity, this.remainingFuel +
                              Math.min(sunlightAmount, this.refuelRate * (currTime - this.lastChargeUpdate)));
         this.lastChargeUpdate = Clock.getInstance().getTime();
     }
@@ -245,7 +275,7 @@ public class Drone {
         retString = retString + ",fuel_cap:" + this.fuelCapacity + "c";
         retString = retString + ",remaining_fuel:" + this.remainingFuel + "c";
         retString = retString + ",refuel_rate:" + this.refuelRate + "c/min";
-        retString = retString + ",fuel_consumption_rate:" + this.fuelCapacity + "c/d";
+        retString = retString + ",fuel_consumption_rate:" + this.fuelConsumptionRate + "c/d";
         retString = retString + ",speed:" + this.speed + "d/10min";
         retString = retString + ",location:" + this.location.toString();
 

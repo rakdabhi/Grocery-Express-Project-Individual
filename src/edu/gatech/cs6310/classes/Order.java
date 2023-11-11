@@ -33,6 +33,9 @@ public class Order {
     public Customer getCustomer() {
         return this.customer;
     }
+    public Location getDestination() {
+        return this.customer.getLocation();
+    }
 
     public String getStoreID() {
         return this.store.getStoreID();

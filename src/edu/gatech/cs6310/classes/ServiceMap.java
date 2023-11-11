@@ -35,7 +35,7 @@ public class ServiceMap {
      */
     public boolean addLocation(Location location, Customer customer) {
         if (this.locationExists(location)) {
-            System.out.println("ERROR:location_already_taken");
+            System.out.println("ERROR:location_already_taken_by_a_customer");
             return false;
         }
         this.customerMap.put(location, customer);
@@ -50,7 +50,7 @@ public class ServiceMap {
      */
     public boolean addLocation(Location location, Store store) {
         if (this.locationExists(location)) {
-            System.out.println("ERROR:location_already_taken");
+            System.out.println("ERROR:location_already_taken_by_a_store");
             return false;
         }
         this.storeMap.put(location, store);
@@ -62,9 +62,9 @@ public class ServiceMap {
      * Computes the distance between two locations using the Pythagorean Theorem
      * @param startLocation - start location
      * @param endLocation - end location
-     * @return distance between two locations as an int
+     * @return distance between two locations as a double
      */
-    public int computeDistance(Location startLocation, Location endLocation) {
+    public double computeDistance(Location startLocation, Location endLocation) {
         if (!locationExists(startLocation)) {
             System.out.println("ERROR:start_location_does_not_exist");
             return 0;
@@ -73,7 +73,7 @@ public class ServiceMap {
             System.out.println("ERROR:end_location_does_not_exist");
             return 0;
         }
-        return (int) Math.sqrt(
+        return Math.sqrt(
                 Math.pow((endLocation.getX() - startLocation.getX()), 2) +
                 Math.pow((endLocation.getY() - startLocation.getY()), 2)
         );

@@ -98,6 +98,15 @@ public class Clock {
     }
 
     /**
+     * Calculates the endTime based on the current time and a required minimum amount of light needed
+     * @param minLightNeeded - minimum amount of light needed for a drone to cover a certain distance
+     * @return the end time of a timeframe in minutes given an amount of light needed
+     */
+    public int getEndTime(int minLightNeeded) {
+        return getEndTime(minLightNeeded, this.time);
+    }
+
+    /**
      * Converts a given date into a Day-Hour-Minute format
      * @param date - the date to convert
      * @return a String representing the date in Day-Hour-Minute format
