@@ -100,15 +100,18 @@ public class Store {
      * Adds a drone for the store to use to deliver orders to their respective customers
      * @param droneID - unique ID of the drone
      * @param weightCapacity - maximum weight drone can lift
-     * @param tripsCapacity - number of remaining trips that drone can take for delivery before needing to be refueled
+     * @param fuelCapacity - maximum fuel capacity of drone in units of charge (c)
+     * @param refuelRate - refuel rate of solar-powered drone in units of charge per minute (c/min)
+     * @param fuelConsumptionRate - rate of fuel consumption in units of charge per unit distance (c/d)
      * @return true if drone is added, else false
      */
-    public boolean addDrone(String droneID, int weightCapacity, int tripsCapacity) {
+    public boolean addDrone(String droneID, int weightCapacity,
+                            int fuelCapacity, int refuelRate, int fuelConsumptionRate) {
         if (drones.containsKey(droneID)) {
             System.out.println("ERROR:drone_identifier_already_exists");
             return false;
         }
-        Drone drone = new Drone(droneID, weightCapacity,tripsCapacity, this.location);
+        Drone drone = new Drone(droneID, weightCapacity, fuelCapacity, refuelRate, fuelConsumptionRate, this.location);
         drones.put(drone.getDroneID(), drone);
         return true;
     }
@@ -117,11 +120,15 @@ public class Store {
      * Adds a drone for the store to use to deliver orders to their respective customers
      * @param droneID - unique ID of the drone as a string
      * @param weightCapacity - maximum weight drone can lift as a string
-     * @param tripsCapacity - number of remaining trips that drone can take for delivery before needing to be refueled as a string
+     * @param fuelCapacity - maximum fuel capacity of drone in units of charge (c)
+     * @param refuelRate - refuel rate of solar-powered drone in units of charge per minute (c/min)
+     * @param fuelConsumptionRate - rate of fuel consumption in units of charge per unit distance (c/d)
      * @return true if drone is added, else false
      */
-    public boolean addDrone(String droneID, String weightCapacity, String tripsCapacity) {
-        return addDrone(droneID, Integer.parseInt(weightCapacity), Integer.parseInt(tripsCapacity));
+    public boolean addDrone(String droneID, String weightCapacity,
+                            String fuelCapacity, String refuelRate, String fuelConsumptionRate) {
+        return addDrone(droneID, Integer.parseInt(weightCapacity),
+                        Integer.parseInt(fuelCapacity), Integer.parseInt(refuelRate), Integer.parseInt(fuelConsumptionRate));
     }
 
     /**

@@ -7,25 +7,37 @@ public class Drone {
     private String droneID;
     private int weightCapacity;
     private int remainingWeight;
-    private int remainingTrips;
     private DronePilot pilot;
     private Map<String, Order> orders;
-    private Location location;
     private int overloads;
 
-    public Drone(String droneID, int weightCapacity, int remainingTrips, Location location) {
+    /*
+     * NOTE: Charge has units 'c', Time has minute units 'min', and Distance has units 'd'
+     */
+    private int fuelCapacity; // maximum fuel capacity of drone in units of charge (c)
+    private int remainingFuel; // the remaining charge that this drone has in units of charge (c)
+    private int lastChargeUpdate; // timestamp of the last time the drone's charge was updated in units of charge (c)
+    private int speed; // speed of drone in units of distance per 10 minutes (d/10min)
+    private int refuelRate; // refuel rate of solar-powered drone in units of charge per minute (c/min)
+    private int fuelConsumptionRate; // rate of fuel consumption in units of charge per unit distance (c/d)
+    private Location location; // current location of drone as a Location class instance
+
+
+    public Drone(String droneID, int weightCapacity, int fuelCapacity,
+                 int refuelRate, int fuelConsumptionRate, Location location) {
         this.droneID = droneID;
         this.weightCapacity = weightCapacity;
         this.remainingWeight = weightCapacity;
-        this.remainingTrips = remainingTrips;
+        this.fuelCapacity = fuelCapacity;
+        this.remainingFuel = fuelCapacity;
+        this.lastChargeUpdate = Clock.getInstance().getTime(); // current time is the last time remaining fuel has been updated
+        this.speed = 1; // default speed is set to 1 unit distance covered every 10 minutes
+        this.refuelRate = refuelRate;
+        this.fuelConsumptionRate = fuelConsumptionRate;
         this.pilot = null;
         this.orders = new TreeMap<String, Order>();
         this.location = location;
         this.overloads = 0;
-    }
-
-    public Drone(String droneID, String weightCapacity, String remainingTrips, Location location) {
-        this(droneID, Integer.parseInt(weightCapacity), Integer.parseInt(remainingTrips), location);
     }
 
     public String getDroneID() {
@@ -36,8 +48,8 @@ public class Drone {
         return this.weightCapacity;
     }
 
-    public int getRemainingTrips() {
-        return this.remainingTrips;
+    public int getFuelCapacity() {
+        return this.fuelCapacity;
     }
 
     public DronePilot getPilot() {
@@ -161,7 +173,7 @@ public class Drone {
             System.out.println("ERROR:drone_needs_pilot");
             return false;
         }
-        if (this.remainingTrips <= 0) {
+        if (this.fuelCapacity <= 0) {
             System.out.println("ERROR:drone_needs_fuel");
             return false;
         }
@@ -180,11 +192,11 @@ public class Drone {
      * @return true if remaining trips is decremented, else false
      */
     private boolean decrementFuel() {
-        if (this.remainingTrips <= 0) {
+        if (this.fuelCapacity <= 0) {
             System.out.println("ERROR:drone_needs_fuel");
             return false;
         }
-        this.remainingTrips -= 1;
+        this.fuelCapacity -= 1;
         return true;
     }
 
@@ -214,7 +226,7 @@ public class Drone {
                  + ",total_cap:" + this.weightCapacity
                  + ",num_orders:" + this.orders.size()
                  + ",remaining_cap:" + this.remainingWeight
-                 + ",trips_left:" + this.remainingTrips;
+                 + ",trips_left:" + this.fuelCapacity;
 
         if (this.pilot != null) {
             String pilotField = ",flown_by:" + pilot.getFullName();

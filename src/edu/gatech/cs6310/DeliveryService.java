@@ -76,7 +76,12 @@ public class DeliveryService {
 
                     case "make_drone":
                         // System.out.println("store: " + tokens[1] + ", drone: " + tokens[2] + ", capacity: " + tokens[3] + ", fuel: " + tokens[4]);
-                        isSuccessful = make_drone(tokens[1], tokens[2], tokens[3], tokens[4]);
+                        // fuelCapacity = tokens[4], refuelRate = tokens[5], fuelConsumptionRate = tokens[6]
+                        if (tokens.length == 4) {
+                            isSuccessful = make_drone(tokens[1], tokens[2], tokens[3]);
+                        } else if (tokens.length == 7) {
+                            isSuccessful = make_drone(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]);
+                        }
                         break;
 
                     case "display_drones":
@@ -278,21 +283,29 @@ public class DeliveryService {
      * @param storeID - unique ID of store that drone works for
      * @param droneID - unique ID of the drone
      * @param weightCapacity - maximum weight drone can lift
-     * @param tripsCapacity - number of remaining trips that drone can take for delivery before needing to be refueled
+     * @param fuelCapacity - maximum fuel capacity of drone in units of charge (c)
+     * @param refuelRate - refuel rate of solar-powered drone in units of charge per minute (c/min)
+     * @param fuelConsumptionRate - rate of fuel consumption in units of charge per unit distance (c/d)
+     * NOTE: Charge has units 'c', Time has minute units 'min', and Distance has units 'd' so that:
+     *       Refuel Rate has units charge per minute 'c/min',
+     *       Fuel Consumption Rate has units charge per distance 'c/d'
+     *       Drone speed has units distance per 10 minutes '1d/10min'
      * @return true if drone is created, else false
      */
-    private boolean make_drone(String storeID, String droneID, String weightCapacity, String tripsCapacity) {
+    private boolean make_drone(String storeID, String droneID, String weightCapacity,
+                               String fuelCapacity, String refuelRate, String fuelConsumptionRate) {
         if (!stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_does_not_exist");
             return false;
         }
         Store store = stores.get(storeID);
-        boolean droneCreated = store.addDrone(droneID, weightCapacity,tripsCapacity);
-        if (droneCreated) {
-            map.addLocation(store.getDrone(droneID).getLocation(), store.getDrone(droneID));
-            System.out.println("OK:change_completed");
-        }
+        boolean droneCreated = store.addDrone(droneID, weightCapacity, fuelCapacity, refuelRate, fuelConsumptionRate);
+        if (droneCreated) System.out.println("OK:change_completed");
         return droneCreated;
+    }
+
+    private boolean make_drone(String storeID, String droneID, String weightCapacity) {
+        return this.make_drone(storeID, droneID, weightCapacity, "1000", "10", "100");
     }
 
     /**
