@@ -87,12 +87,13 @@ public class Clock {
      * @param startTime - time that drone will start charging in minutes
      * @return the end time of a timeframe in minutes given a start time and an amount of light needed
      */
-    public static int getEndTime(int minLightNeeded,int startTime) {
+    public static int getEndTime(int minLightNeeded, int startTime) {
         int endTime = startTime;
+        double startTimeDayLight = daylightFunc(startTime); // start time daylight number is precalculated to save on re-computation in for-loop
         int light = 0;
         while (light < minLightNeeded) {
             endTime++;
-            light = getLightOverTime(startTime, endTime);
+            light = (int) Math.round(daylightFunc(endTime) - startTimeDayLight);
         }
         return endTime;
     }
