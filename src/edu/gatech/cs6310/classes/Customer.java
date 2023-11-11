@@ -182,6 +182,14 @@ public class Customer extends User {
     }
 
     /**
+     * Gives customer some credit if their order was not delivered in a reasonable time
+     * @param credit - amount of credit given by store
+     */
+    public void giveCredit(int credit) {
+        this.credit += credit;
+    }
+
+    /**
      * Customer cancels an order
      * @param storeID - unique ID of store to cancel order from
      * @param orderID - unique ID of order to cancel

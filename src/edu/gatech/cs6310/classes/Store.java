@@ -222,10 +222,37 @@ public class Store {
         Drone drone = order.getDrone();
         boolean orderDelivered = drone.deliverOrder(order);
         if (orderDelivered && !drone.containsOrder(orderID)) {
+            checkDeliveryTime(order);
             this.overloads += drone.getOverloads();
             orders.remove(orderID);
         }
         return orderDelivered && !orders.containsKey(orderID);
+    }
+
+    /**
+     * Checks the delivery time of order and gives credit to customer if delivery time is unreasonable
+     * @param order - order to check delivery time
+     */
+    public void checkDeliveryTime(Order order) {
+        if (order.getReasonableDeliveryTime() < 0) {
+            System.out.println("ERROR:order_has_not_been_purchased");
+            return;
+        }
+        if (order.getActualDeliveryTime() < 0) {
+            System.out.println("ERROR:order_not_delivered_yet");
+            return;
+        }
+
+        // if order delivery took longer than the reasonable time expected,
+        // then store gives customer a discount of 20%, or the amount of revenue they have, whichever is min
+        if (order.getReasonableDeliveryTime() < order.getActualDeliveryTime()) {
+            Customer customer = order.getCustomer();
+            int discount = Math.min((int) (order.getOrderCost() * 0.2), this.revenue);
+            customer.giveCredit(discount);
+            this.revenue -= discount;
+            this.penalties += 1;
+            this.penaltiesCost += discount;
+        }
     }
 
     /**
@@ -313,7 +340,9 @@ public class Store {
         return "name:" + this.name +
               ",purchases:" + this.purchases +
               ",overloads:" + this.overloads +
-              ",transfers:" + this.transfers;
+              ",transfers:" + this.transfers +
+              ",penalties:" + this.penalties +
+              ",penalties_cost:" + this.penaltiesCost;
     }
 
     /**

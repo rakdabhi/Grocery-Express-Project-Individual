@@ -179,7 +179,7 @@ public class Drone {
         }
 
         updateCharge();
-        int deliveryTime = Clock.getInstance().getTime();
+        int deliveryStartTime = Clock.getInstance().getTime();
 
         double distance = ServiceMap.getInstance().computeDistance(this.location, order.getDestination());
 
@@ -188,7 +188,7 @@ public class Drone {
 
         travelDistance(distance); // drone travels the distance to delivery order
 
-        deliveryTime = Clock.getInstance().getTime() - deliveryTime; // tracks delivery time of order
+        int deliveryTime = Clock.getInstance().getTime() - deliveryStartTime; // tracks delivery time of order
         order.setActualDeliveryTime(deliveryTime); // sets delivery time of order
         this.lastChargeUpdate = Clock.getInstance().getTime();
         this.location = order.getDestination();
