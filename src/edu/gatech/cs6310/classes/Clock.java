@@ -119,7 +119,8 @@ public class Clock {
      */
     @Override
     public String toString() {
-        return "absolute_time:" + this.time +
+        return "TIMESTAMP: " +
+               "absolute_time:" + this.time +
                ",relative_time:" + this.getTimeDateFormat();
     }
 }

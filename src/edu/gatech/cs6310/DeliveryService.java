@@ -22,7 +22,7 @@ public class DeliveryService {
         put("make_customer", 2);
         put("start_order", 5);
         put("request_item", 7);
-        put("purchase_order", 5);
+        // put("purchase_order", 5);
         put("cancel_order", 3);
         put("transfer_order", 6);
     }};
@@ -142,6 +142,7 @@ public class DeliveryService {
                         break;
 
                     case "display_time":
+                        clock.incrementTime(1);
                         display_time();
                         break;
 
@@ -204,10 +205,11 @@ public class DeliveryService {
      * Displays all stores, ordered on the stores' names
      */
     private void display_stores() {
+        display_time();
         for (Map.Entry<String, Store> storeEntry : stores.entrySet()) {
             System.out.println(storeEntry.getValue().toString());
-            clock.incrementTime(1);
         }
+        clock.incrementTime(this.stores.size());
         System.out.println("OK:display_completed");
     }
 
@@ -231,6 +233,7 @@ public class DeliveryService {
      * @param storeID - unique ID of store
      */
     private void display_items(String storeID) {
+        display_time();
         if (!stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_does_not_exist");
             return;
@@ -271,10 +274,11 @@ public class DeliveryService {
      * Displays all employees, ordered on the employees' account IDs
      */
     private void display_pilots() {
+        display_time();
         for (Map.Entry<String, Employee> employeeEntry : employees.entrySet()) {
             System.out.println(employeeEntry.getValue().toString());
-            clock.incrementTime(1);
         }
+        clock.incrementTime(this.employees.size());
         System.out.println("OK:display_completed");
     }
 
@@ -305,7 +309,8 @@ public class DeliveryService {
     }
 
     private boolean make_drone(String storeID, String droneID, String weightCapacity) {
-        return this.make_drone(storeID, droneID, weightCapacity, "1000", "10", "100");
+        return this.make_drone(storeID, droneID, weightCapacity,
+                "1000", "10", "100");
     }
 
     /**
@@ -313,6 +318,7 @@ public class DeliveryService {
      * @param storeID - unique ID of store that owns the drones
      */
     private void display_drones(String storeID) {
+        display_time();
         if (!stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_does_not_exist");
             return;
@@ -395,10 +401,11 @@ public class DeliveryService {
      * Displays all customers
      */
     private void display_customers() {
+        display_time();
         for (Map.Entry<String, Customer> customerEntry : customers.entrySet()) {
             System.out.println(customerEntry.getValue().toString());
-            clock.incrementTime(1);
         }
+        clock.incrementTime(this.customers.size());
         System.out.println("OK:display_completed");
     }
 
@@ -437,6 +444,7 @@ public class DeliveryService {
      * @param storeID - unique ID of store that has orders
      */
     private void display_orders(String storeID) {
+        display_time();
         if (!stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_does_not_exist");
             return;
@@ -545,10 +553,11 @@ public class DeliveryService {
      * Displays information about three metrics for each store (purchases, overloads, and transfers)
      */
     private void display_efficiency() {
+        display_time();
         for (Map.Entry<String, Store> storeEntry : stores.entrySet()) {
             System.out.println(storeEntry.getValue().getEfficiency());
-            clock.incrementTime(1);
         }
+        clock.incrementTime(this.stores.size());
         System.out.println("OK:display_completed");
     }
 
@@ -556,7 +565,6 @@ public class DeliveryService {
      * Displays the current time of the system
      */
     private void display_time() {
-        clock.incrementTime(1);
         System.out.println(clock.toString());
     }
 }

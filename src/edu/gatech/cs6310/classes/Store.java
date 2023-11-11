@@ -13,6 +13,8 @@ public class Store {
     private int purchases;
     private int overloads;
     private int transfers;
+    private int penalties;
+    private int penaltiesCost;
 
     public Store(String name, int revenue, Location location) {
         this.name = name;
@@ -24,6 +26,8 @@ public class Store {
         this.purchases = 0;
         this.overloads = 0;
         this.transfers = 0;
+        this.penalties = 0;
+        this.penaltiesCost = 0;
     }
 
     public Store(String name, String revenue, Location location) {
@@ -91,8 +95,8 @@ public class Store {
     public void displayItems() {
         for (Map.Entry<String, Item> itemEntry : items.entrySet()) {
             System.out.println(itemEntry.getValue().toString());
-            Clock.getInstance().incrementTime(1);
         }
+        Clock.getInstance().incrementTime(this.items.size());
         System.out.println("OK:display_completed");
     }
 
@@ -137,8 +141,8 @@ public class Store {
     public void displayDrones() {
         for (Map.Entry<String, Drone> droneEntry : drones.entrySet()) {
             System.out.println(droneEntry.getValue().toString());
-            Clock.getInstance().incrementTime(1);
         }
+        Clock.getInstance().incrementTime(this.drones.size());
         System.out.println("OK:display_completed");
     }
 
@@ -262,8 +266,8 @@ public class Store {
     public void displayOrders() {
         for (Map.Entry<String, Order> orderEntry : orders.entrySet()) {
             System.out.println(orderEntry.getValue().toString());
-            Clock.getInstance().incrementTime(1);
         }
+        Clock.getInstance().incrementTime(this.orders.size());
         System.out.println("OK:display_completed");
     }
 
