@@ -216,23 +216,37 @@ public class Drone {
     }
 
     /**
+     * Function to update the remaining charge level of this drone since the last time it was updated
+     */
+    private void updateCharge() {
+        int currTime = Clock.getInstance().getTime();
+        int sunlightAmount = Clock.getLightOverTime(this.lastChargeUpdate, currTime);
+        this.remainingFuel = Math.min(this.fuelCapacity,
+                             Math.min(sunlightAmount, this.refuelRate * (currTime - this.lastChargeUpdate)));
+        this.lastChargeUpdate = Clock.getInstance().getTime();
+    }
+
+    /**
      * Information about this drone
      * @return String representing information about this drone
      */
     @Override
     public String toString() {
-        String retString = "";
+        updateCharge();
+        String retString;
         retString = "droneID:" + this.droneID
                  + ",total_cap:" + this.weightCapacity
                  + ",num_orders:" + this.orders.size()
-                 + ",remaining_cap:" + this.remainingWeight
-                 + ",trips_left:" + this.fuelCapacity;
-
+                 + ",remaining_cap:" + this.remainingWeight;
         if (this.pilot != null) {
             String pilotField = ",flown_by:" + pilot.getFullName();
             retString += pilotField;
         }
-
+        retString = retString + ",fuel_cap:" + this.fuelCapacity + "c";
+        retString = retString + ",remaining_fuel:" + this.remainingFuel + "c";
+        retString = retString + ",refuel_rate:" + this.refuelRate + "c/min";
+        retString = retString + ",fuel_consumption_rate:" + this.fuelCapacity + "c/d";
+        retString = retString + ",speed:" + this.speed + "d/10min";
         retString = retString + ",location:" + this.location.toString();
 
         return retString;
