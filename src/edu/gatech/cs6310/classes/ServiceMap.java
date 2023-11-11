@@ -7,7 +7,6 @@ public class ServiceMap {
     private static ServiceMap map;
     private Map<Location, Customer> customerMap;
     private Map<Location, Store> storeMap;
-    private Map<Location, Drone> droneMap;
 
     /**
      * Private constructor to construct a Singleton ServiceMap instance
@@ -15,7 +14,6 @@ public class ServiceMap {
     private ServiceMap() {
         this.customerMap = new TreeMap<Location, Customer>();
         this.storeMap = new TreeMap<Location, Store>();
-        this.droneMap = new TreeMap<Location, Drone>();
     }
 
     /**
@@ -59,20 +57,6 @@ public class ServiceMap {
         return true;
     }
 
-    /**
-     * Function to add a location-drone pairing to droneMap
-     * @param location - location of drone to add to droneMap
-     * @param drone - drone with given location
-     * @return true if drone is added to map, else false
-     */
-    public boolean addLocation(Location location, Drone drone) {
-        if (this.locationExists(location)) {
-            System.out.println("ERROR:location_already_taken");
-            return false;
-        }
-        this.droneMap.put(location, drone);
-        return true;
-    }
 
     /**
      * Computes the distance between two locations using the Pythagorean Theorem
