@@ -184,7 +184,7 @@ public class Drone {
         double distance = ServiceMap.getInstance().computeDistance(this.location, order.getDestination());
 
         // sets a reasonable delivery time to 1.5 * delivery time (time to cover distance at default speed without factoring sitting idle to recharge)
-        order.setReasonableDeliveryTime((int) (15 * distance));
+        order.setReasonableDeliveryTime((int) (1.5 * ((distance / this.speed) * 10)));
 
         travelDistance(distance); // drone travels the distance to delivery order
 
@@ -210,7 +210,7 @@ public class Drone {
         // When the drone has enough remaining fuel to cover the distance
         if (this.remainingFuel >= requiredFuel) {
             this.remainingFuel -= requiredFuel;
-            Clock.getInstance().incrementTime((int) (10 * distance)); // Time it takes to cover distance required
+            Clock.getInstance().incrementTime((int) (distance / this.speed) * 10); // Time it takes to cover distance required
 
         // When the drone can wait at its current place until it's battery has filled enough to cover the distance
         } else if (this.fuelCapacity - this.remainingFuel >= requiredFuel) {
@@ -233,7 +233,7 @@ public class Drone {
             this.remainingFuel = this.fuelCapacity; // battery is now fully charged
 
             double fullChargeRange = (double)this.remainingFuel / this.fuelConsumptionRate; // max distance drone can cover on full charge
-            Clock.getInstance().incrementTime((int) (10 * fullChargeRange)); // time it takes to cover max distance
+            Clock.getInstance().incrementTime((int) (fullChargeRange / this.speed) * 10); // time it takes to cover max distance
             this.remainingFuel = 0; // battery is depleted
             travelDistance(distance - fullChargeRange);
         }
