@@ -128,7 +128,7 @@ public class Clock {
             hours -= 12;
             amOrPM = "PM";
         }
-        return String.format("Day %d %02d:%02d%s", days, hours, minutes, amOrPM);
+        return String.format("Day %d, %02d:%02d%s", days, hours, minutes, amOrPM);
     }
 
     /**
