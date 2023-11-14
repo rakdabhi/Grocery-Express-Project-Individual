@@ -22,7 +22,6 @@ public class DeliveryService {
         put("make_customer", 2);
         put("start_order", 5);
         put("request_item", 7);
-        // put("purchase_order", 5);
         put("cancel_order", 3);
         put("transfer_order", 6);
     }};
