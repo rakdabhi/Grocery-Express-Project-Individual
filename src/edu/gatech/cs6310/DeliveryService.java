@@ -45,7 +45,11 @@ public class DeliveryService {
                     case "make_store":
                         // System.out.println("store: " + tokens[1] + ", revenue: " + tokens[2]);
                         // xCoordinate = tokens[3], yCoordinate = tokens[4]
-                        isSuccessful = make_store(tokens[1], tokens[2], tokens[3], tokens[4]);
+                        if (tokens.length == 3) {
+                            isSuccessful = make_store(tokens[1], tokens[2]);
+                        } else if (tokens.length == 5) {
+                            isSuccessful = make_store(tokens[1], tokens[2], tokens[3], tokens[4]);
+                        }
                         break;
 
                     case "display_stores":
@@ -97,7 +101,11 @@ public class DeliveryService {
                         // System.out.print("account: " + tokens[1] + ", first_name: " + tokens[2] + ", last_name: " + tokens[3]);
                         // System.out.println(", phone: " + tokens[4] + ", rating: " + tokens[5] + ", credit: " + tokens[6]);
                         // xCoordinate = tokens[7], yCoordinate = tokens[8]
-                        isSuccessful = make_customer(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7], tokens[8]);
+                        if (tokens.length == 7) {
+                            isSuccessful = make_customer(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]);
+                        } else if (tokens.length == 9) {
+                            isSuccessful = make_customer(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7], tokens[8]);
+                        }
                         break;
 
                     case "display_customers":
@@ -179,16 +187,14 @@ public class DeliveryService {
      * Method to create a store if it doesn't exist
      * @param storeID - unique ID of store to create
      * @param revenue - revenue of store as an integer
-     * @param x - x coordinate of store
-     * @param y - y coordinate of store
+     * @param location - location of store in x,y coordinates
      * @return true if store is created, else false
      */
-    private boolean make_store(String storeID, String revenue, String x, String y) {
+    private boolean make_store(String storeID, String revenue, Location location) {
         if (stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_already_exists");
             return false;
         }
-        Location location = new Location(x, y);
         if (map.locationExists(location)) {
             System.out.println("ERROR:location_already_taken");
             return false;
@@ -198,6 +204,29 @@ public class DeliveryService {
         stores.put(store.getStoreID(), store);
         System.out.println("OK:change_completed");
         return true;
+    }
+
+    /**
+     * Method to create a store if it doesn't exist
+     * @param storeID - unique ID of store to create
+     * @param revenue - revenue of store as an integer
+     * @param x - x coordinate of store
+     * @param y - y coordinate of store
+     * @return true if store is created, else false
+     */
+    private boolean make_store(String storeID, String revenue, String x, String y) {
+        return this.make_store(storeID, revenue, new Location(x, y));
+    }
+
+    /**
+     * Method to create a store if it doesn't exist
+     * @param storeID - unique ID of store to create
+     * @param revenue - revenue of store as an integer
+     * @return true if store is created, else false
+     */
+    private boolean make_store(String storeID, String revenue) {
+        Location location = generateRandomLocation();
+        return this.make_store(storeID, revenue, location);
     }
 
     /**
@@ -373,18 +402,16 @@ public class DeliveryService {
      * @param phone - phone number of customer
      * @param rating - rating of customer
      * @param credit - credit/money that customer has available to spend on groceries
-     * @param x - x coordinate of customer
-     * @param y - y coordinate of customer
+     * @param location - location of customer in x,y coordinates
      * @return true if customer is created, else false
      */
     private boolean make_customer(String accountID, String firstName, String lastName,
                                   String phone, String rating, String credit,
-                                  String x, String y) {
+                                  Location location) {
         if (customers.containsKey(accountID)) {
             System.out.println("ERROR:customer_identifier_already_exists");
             return false;
         }
-        Location location = new Location(x, y);
         if (map.locationExists(location)) {
             System.out.println("ERROR:location_already_taken");
             return false;
@@ -394,6 +421,40 @@ public class DeliveryService {
         customers.put(customer.getAccountID(), customer);
         System.out.println("OK:change_completed");
         return true;
+    }
+
+    /**
+     * Creates a customer if they don't exist
+     * @param accountID - unique ID of customer
+     * @param firstName - first name of customer
+     * @param lastName - last name of customer
+     * @param phone - phone number of customer
+     * @param rating - rating of customer
+     * @param credit - credit/money that customer has available to spend on groceries
+     * @param x - x coordinate of customer
+     * @param y - y coordinate of customer
+     * @return true if customer is created, else false
+     */
+    private boolean make_customer(String accountID, String firstName, String lastName,
+                                  String phone, String rating, String credit,
+                                  String x, String y) {
+        return this.make_customer(accountID, firstName, lastName, phone, rating, credit, new Location(x, y));
+    }
+
+    /**
+     * Creates a customer if they don't exist
+     * @param accountID - unique ID of customer
+     * @param firstName - first name of customer
+     * @param lastName - last name of customer
+     * @param phone - phone number of customer
+     * @param rating - rating of customer
+     * @param credit - credit/money that customer has available to spend on groceries
+     * @return true if customer is created, else false
+     */
+    private boolean make_customer(String accountID, String firstName, String lastName,
+                                  String phone, String rating, String credit) {
+        Location location = generateRandomLocation();
+        return this.make_customer(accountID, firstName, lastName, phone, rating, credit, location);
     }
 
     /**
@@ -565,5 +626,21 @@ public class DeliveryService {
      */
     private void display_time() {
         System.out.println(clock.toString());
+    }
+
+    private Location generateRandomLocation() {
+        Location location;
+        int x,y;
+        int min = 0;
+        int max = 9;
+        for (int i = 0; i < 100; i++) {
+            x = (int)(Math.random()*((max-min)+1))+min;
+            y = (int)(Math.random()*((max-min)+1))+min;
+            location = new Location(x, y);
+            if (!map.locationExists(location)) {
+                return location;
+            }
+        }
+        return null;
     }
 }

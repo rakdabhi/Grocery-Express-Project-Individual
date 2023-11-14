@@ -1,5 +1,7 @@
 package edu.gatech.cs6310.classes;
 
+import java.util.Objects;
+
 public class Location implements Comparable<Location> {
     private int x, y;
 
@@ -47,6 +49,15 @@ public class Location implements Comparable<Location> {
         } else {
             return Integer.compare(this.y, thatLocation.getY());
         }
+    }
+
+    /**
+     * Overridden hashcode function to ensure that locations with the same x,y coordinates have the same hash
+     * @return hashcode of this location based on the x,y coordinates
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     /**

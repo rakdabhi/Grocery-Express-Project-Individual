@@ -85,6 +85,9 @@ public class ServiceMap {
      * @return true if a customer or store exists at the given location, else false
      */
     public boolean locationExists(Location location) {
+        if (location == null) {
+            return false;
+        }
         return this.customerMap.containsKey(location) || this.storeMap.containsKey(location);
     }
 }
