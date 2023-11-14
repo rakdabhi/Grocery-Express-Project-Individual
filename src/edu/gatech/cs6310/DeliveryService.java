@@ -39,7 +39,7 @@ public class DeliveryService {
                 // Determine the next command and echo it to the monitor for testing purposes
                 wholeInputLine = commandLineInput.nextLine();
                 tokens = wholeInputLine.split(DELIMITER);
-                System.out.println("> " + wholeInputLine);
+                System.out.println("> " + wholeInputLine + " " + clock.toString());
 
                 switch (tokens[0]) {
                     case "make_store":
@@ -148,11 +148,6 @@ public class DeliveryService {
                         display_efficiency();
                         break;
 
-                    case "display_time":
-                        clock.incrementTime(1);
-                        display_time();
-                        break;
-
                     case "stop":
                         System.out.println("stop acknowledged");
                         break label;
@@ -233,7 +228,6 @@ public class DeliveryService {
      * Displays all stores, ordered on the stores' names
      */
     private void display_stores() {
-        display_time();
         for (Map.Entry<String, Store> storeEntry : stores.entrySet()) {
             System.out.println(storeEntry.getValue().toString());
         }
@@ -261,7 +255,6 @@ public class DeliveryService {
      * @param storeID - unique ID of store
      */
     private void display_items(String storeID) {
-        display_time();
         if (!stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_does_not_exist");
             return;
@@ -302,7 +295,6 @@ public class DeliveryService {
      * Displays all employees, ordered on the employees' account IDs
      */
     private void display_pilots() {
-        display_time();
         for (Map.Entry<String, Employee> employeeEntry : employees.entrySet()) {
             System.out.println(employeeEntry.getValue().toString());
         }
@@ -346,7 +338,6 @@ public class DeliveryService {
      * @param storeID - unique ID of store that owns the drones
      */
     private void display_drones(String storeID) {
-        display_time();
         if (!stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_does_not_exist");
             return;
@@ -461,7 +452,6 @@ public class DeliveryService {
      * Displays all customers
      */
     private void display_customers() {
-        display_time();
         for (Map.Entry<String, Customer> customerEntry : customers.entrySet()) {
             System.out.println(customerEntry.getValue().toString());
         }
@@ -504,7 +494,6 @@ public class DeliveryService {
      * @param storeID - unique ID of store that has orders
      */
     private void display_orders(String storeID) {
-        display_time();
         if (!stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_does_not_exist");
             return;
@@ -613,19 +602,11 @@ public class DeliveryService {
      * Displays information about three metrics for each store (purchases, overloads, and transfers)
      */
     private void display_efficiency() {
-        display_time();
         for (Map.Entry<String, Store> storeEntry : stores.entrySet()) {
             System.out.println(storeEntry.getValue().getEfficiency());
         }
         clock.incrementTime(this.stores.size());
         System.out.println("OK:display_completed");
-    }
-
-    /**
-     * Displays the current time of the system
-     */
-    private void display_time() {
-        System.out.println(clock.toString());
     }
 
     private Location generateRandomLocation() {
