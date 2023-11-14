@@ -120,7 +120,15 @@ public class Clock {
         int days = date / 1440;
         int hours = (date % 1440) / 60;
         int minutes = (date % 1440) % 60;
-        return String.format("Day%s_%sH:%sM", days, hours, minutes);
+        String amOrPM = "AM";
+
+        if (hours == 12) {
+            amOrPM = "PM";
+        } else if (hours >= 13) {
+            hours -= 12;
+            amOrPM = "PM";
+        }
+        return String.format("Day %d %02d:%02d%s", days, hours, minutes, amOrPM);
     }
 
     /**
@@ -129,8 +137,8 @@ public class Clock {
      */
     @Override
     public String toString() {
-        return "TIMESTAMP: " +
-               "absolute_time:" + this.time +
-               ",relative_time:" + this.getTimeDateFormat();
+        return "[TIMESTAMP: " +
+               this.time + " min (" +
+               this.getTimeDateFormat() + ")]";
     }
 }
