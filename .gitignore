@@ -8,4 +8,4 @@
 /dataSources/
 /dataSources.local.xml
 /out/
-/docker_results/
+/docker_results
