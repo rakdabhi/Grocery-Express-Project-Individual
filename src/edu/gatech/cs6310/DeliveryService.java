@@ -80,7 +80,7 @@ public class DeliveryService {
                     case "make_drone":
                         // System.out.println("store: " + tokens[1] + ", drone: " + tokens[2] + ", capacity: " + tokens[3] + ", fuel: " + tokens[4]);
                         // fuelCapacity = tokens[4], refuelRate = tokens[5], fuelConsumptionRate = tokens[6]
-                        if (tokens.length == 4) {
+                        if (tokens.length == 4 || tokens.length == 5) {
                             isSuccessful = make_drone(tokens[1], tokens[2], tokens[3]);
                         } else if (tokens.length == 7) {
                             isSuccessful = make_drone(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]);
