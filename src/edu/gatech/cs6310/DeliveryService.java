@@ -328,6 +328,18 @@ public class DeliveryService {
         return droneCreated;
     }
 
+    /**
+     * Creates a drone that will carry and deliver groceries for a particular store
+     * @param storeID - unique ID of store that drone works for
+     * @param droneID - unique ID of the drone
+     * @param weightCapacity - maximum weight drone can lift
+     * NOTE: default values:
+     * fuelCapacity = 1000c
+     * refuelRate = 10c/min
+     * fuelConsumptionRate = 100c/d
+     * speed = 1d/10min
+     * @return true if drone is created, else false
+     */
     private boolean make_drone(String storeID, String droneID, String weightCapacity) {
         return this.make_drone(storeID, droneID, weightCapacity,
                 "1000", "10", "100");
