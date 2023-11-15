@@ -62,8 +62,11 @@ public class Clock {
      * @return amount of daylight emitted from start time to end time
      */
     public static int getLightOverTime(int startTime, int endTime) {
-        if (startTime >= endTime) {
-            System.out.printf("ERROR:Start time %d is greater than or equal to end time %d!", startTime, endTime);
+        if (startTime > endTime) {
+            System.out.printf("ERROR:Start time %d is greater than end time %d!\n", startTime, endTime);
+            return 0;
+        }
+        if (startTime == endTime) {
             return 0;
         }
         return (int) Math.round(daylightFunc(endTime) - daylightFunc(startTime));
