@@ -90,7 +90,7 @@ public class Clock {
      * @return amount of daylight emitted from current time to some amount of time delta in the future
      */
     public int getLightOverDelta(int delta) {
-        return getLightOverTime(delta + this.time, this.time);
+        return getLightOverTime(this.time, delta + this.time);
     }
 
     /**
