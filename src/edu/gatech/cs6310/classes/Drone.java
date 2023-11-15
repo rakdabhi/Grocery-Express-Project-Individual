@@ -233,7 +233,7 @@ public class Drone {
             // if less light is emitted than the refuel rate time
             } else {
                 int startTime = Clock.getInstance().getTime();
-                int endTime = Clock.getEndTime(minLightNeeded, startTime);
+                int endTime = Clock.getEndTime(minLightNeeded, startTime, minLightNeeded / this.refuelRate);
                 idleTime = endTime - startTime;
                 System.out.println("CASE 2.2: time increment - " + idleTime);
             }
@@ -255,7 +255,7 @@ public class Drone {
             // if less light is emitted than the refuel rate time
             } else {
                 int startTime = Clock.getInstance().getTime();
-                int endTime = Clock.getEndTime(fuelForFullCharge, startTime);
+                int endTime = Clock.getEndTime(fuelForFullCharge, startTime, fuelForFullCharge / this.refuelRate);
                 idleTime = endTime - startTime;
                 System.out.println("CASE 3.2: time - " + idleTime);
             }

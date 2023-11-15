@@ -97,27 +97,19 @@ public class Clock {
      * Calculates the endTime based on a given startTime and a required minimum amount of light needed
      * @param minLightNeeded - minimum amount of light needed for a drone to cover a certain distance
      * @param startTime - time that drone will start charging in minutes
+     * @param endTimeOffsetDelta - delta time from startTime to start counting the endTime
      * @return the end time of a timeframe in minutes given a start time and an amount of light needed
      */
-    public static int getEndTime(int minLightNeeded, int startTime) {
-        int endTime = startTime;
+    public static int getEndTime(int minLightNeeded, int startTime, int endTimeOffsetDelta) {
+        int endTime = startTime + endTimeOffsetDelta;
         double startTimeDayLight = daylightFunc(startTime); // start time daylight number is precalculated to save on re-computation in for-loop
         int light = 0;
         while (light < minLightNeeded) {
             endTime++;
             light = (int) Math.round(daylightFunc(endTime) - startTimeDayLight);
-            System.out.println("minLightNeeded: " + minLightNeeded + ", light: " + light + ", start: " + startTime + ", end: " + endTime);
+            // System.out.println("minLightNeeded: " + minLightNeeded + ", light: " + light + ", start: " + startTime + ", end: " + endTime + ", delta: " + (endTime - startTime));
         }
         return endTime;
-    }
-
-    /**
-     * Calculates the endTime based on the current time and a required minimum amount of light needed
-     * @param minLightNeeded - minimum amount of light needed for a drone to cover a certain distance
-     * @return the end time of a timeframe in minutes given an amount of light needed
-     */
-    public int getEndTime(int minLightNeeded) {
-        return getEndTime(minLightNeeded, this.time);
     }
 
     /**
