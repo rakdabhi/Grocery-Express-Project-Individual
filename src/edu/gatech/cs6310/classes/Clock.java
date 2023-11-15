@@ -106,6 +106,7 @@ public class Clock {
         while (light < minLightNeeded) {
             endTime++;
             light = (int) Math.round(daylightFunc(endTime) - startTimeDayLight);
+            System.out.println("minLightNeeded: " + minLightNeeded + ", light: " + light + ", start: " + startTime + ", end: " + endTime);
         }
         return endTime;
     }

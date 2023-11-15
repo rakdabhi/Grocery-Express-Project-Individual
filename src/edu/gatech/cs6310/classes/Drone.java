@@ -219,12 +219,13 @@ public class Drone {
             Clock.getInstance().incrementTime((int) (distance / this.speed) * 10); // Time it takes to cover distance required
 
         // When the drone can wait at its current place until it's battery has filled enough to cover the distance
-        } else if (this.fuelCapacity - this.remainingFuel >= requiredFuel) {
+        } else if (this.fuelCapacity >= requiredFuel) {
             // Drone waits in-place to charge battery
             int minLightNeeded = requiredFuel - this.remainingFuel;
             int idleTime = -1;
 
             // if more light is emitted during the span of the refuel rate time than the minimum amount of light needed to cover distance
+            System.out.println("2. Delta: " + (minLightNeeded/this.refuelRate) + ", Light over Delta: " + Clock.getInstance().getLightOverDelta(minLightNeeded / this.refuelRate));
             if (minLightNeeded <= Clock.getInstance().getLightOverDelta(minLightNeeded / this.refuelRate)) {
                 idleTime = minLightNeeded / this.refuelRate;
                 System.out.println("CASE 2.1: time increment - " + idleTime);
@@ -246,6 +247,7 @@ public class Drone {
             int idleTime = -1;
 
             // if more light is emitted during the span of the refuel rate time than the amount of light needed for a full charge
+            System.out.println("3. Delta: " + (fuelForFullCharge/this.refuelRate) + ", Light over Delta: " + Clock.getInstance().getLightOverDelta(fuelForFullCharge / this.refuelRate));
             if (fuelForFullCharge <= Clock.getInstance().getLightOverDelta(fuelForFullCharge / this.refuelRate)) {
                 idleTime = fuelForFullCharge / this.refuelRate;
                 System.out.println("CASE 3.1: time - " + idleTime);
