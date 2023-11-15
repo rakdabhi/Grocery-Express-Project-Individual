@@ -85,6 +85,15 @@ public class Clock {
     }
 
     /**
+     * Returns the amount of sunlight that was emitted from the current time to some amount of time delta in the future
+     * @param delta - amount of time in the future in minutes
+     * @return amount of daylight emitted from current time to some amount of time delta in the future
+     */
+    public int getLightOverDelta(int delta) {
+        return getLightOverTime(delta + this.time, this.time);
+    }
+
+    /**
      * Calculates the endTime based on a given startTime and a required minimum amount of light needed
      * @param minLightNeeded - minimum amount of light needed for a drone to cover a certain distance
      * @param startTime - time that drone will start charging in minutes

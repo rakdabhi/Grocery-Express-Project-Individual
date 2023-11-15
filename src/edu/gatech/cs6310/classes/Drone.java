@@ -216,9 +216,18 @@ public class Drone {
         } else if (this.fuelCapacity - this.remainingFuel >= requiredFuel) {
             // Drone waits in-place to charge battery
             int minLightNeeded = requiredFuel - this.remainingFuel;
-            int startTime = Clock.getInstance().getTime();
-            int endTime = Clock.getEndTime(minLightNeeded, startTime);
-            int idleTime = (int) Math.max((double) minLightNeeded / this.refuelRate, endTime - startTime);
+            int idleTime = -1;
+
+            // if more light is emitted during the span of the refuel rate time than the minimum amount of light needed to cover distance
+            if (minLightNeeded <= Clock.getInstance().getLightOverDelta(minLightNeeded / this.refuelRate)) {
+                idleTime = minLightNeeded / this.refuelRate;
+
+            // if less light is emitted than the refuel rate time
+            } else {
+                int startTime = Clock.getInstance().getTime();
+                int endTime = Clock.getEndTime(minLightNeeded, startTime);
+                idleTime = endTime - startTime;
+            }
             Clock.getInstance().incrementTime(idleTime); // time to charge battery just enough to cover distance
             this.remainingFuel = requiredFuel; // battery is full enough to cover distance
             travelDistance(distance);
@@ -226,9 +235,18 @@ public class Drone {
         // When the drone can't cover the distance even on a full charge (i.e. if (this.fuelCapacity - this.remainingFuel < requiredFuel))
         } else {
             int fuelForFullCharge = this.fuelCapacity - this.remainingFuel;
-            int startTime = Clock.getInstance().getTime();
-            int endTime = Clock.getEndTime(fuelForFullCharge, startTime);
-            int idleTime = (int) Math.max((double) fuelForFullCharge / this.refuelRate, endTime - startTime);
+            int idleTime = -1;
+
+            // if more light is emitted during the span of the refuel rate time than the amount of light needed for a full charge
+            if (fuelForFullCharge <= Clock.getInstance().getLightOverDelta(fuelForFullCharge / this.refuelRate)) {
+                idleTime = fuelForFullCharge / this.refuelRate;
+
+            // if less light is emitted than the refuel rate time
+            } else {
+                int startTime = Clock.getInstance().getTime();
+                int endTime = Clock.getEndTime(fuelForFullCharge, startTime);
+                idleTime = endTime - startTime;
+            }
             Clock.getInstance().incrementTime(idleTime); // Time to fully charge battery
             this.remainingFuel = this.fuelCapacity; // battery is now fully charged
 
