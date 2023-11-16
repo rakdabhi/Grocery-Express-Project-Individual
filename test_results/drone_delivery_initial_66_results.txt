@@ -1,0 +1,269 @@
+Welcome to the Grocery Express Delivery Service!
+> // creating store, items, pilots, drones, customers, and orders [TIMESTAMP: 0 min (Day 0, 00:00AM)]
+> make_store,publix,35000,0,0 [TIMESTAMP: 0 min (Day 0, 00:00AM)]
+OK:change_completed
+> sell_item,publix,cake,5 [TIMESTAMP: 2 min (Day 0, 00:02AM)]
+OK:change_completed
+> make_pilot,pilot1,rocky,balboa,999-999-9999,999-99-9999,rb1234,0 [TIMESTAMP: 5 min (Day 0, 00:05AM)]
+OK:change_completed
+> make_drone,publix,drone1,20,1000,10,100 [TIMESTAMP: 8 min (Day 0, 00:08AM)]
+OK:change_completed
+> fly_drone,publix,drone1,pilot1 [TIMESTAMP: 11 min (Day 0, 00:11AM)]
+OK:change_completed
+> // Test to make sure customer can't be initialized at a location that has been taken by another customer or store [TIMESTAMP: 15 min (Day 0, 00:15AM)]
+> make_customer,customer1,tom,cruise,111-111-1111,5,1000,0,0 [TIMESTAMP: 15 min (Day 0, 00:15AM)]
+ERROR:location_already_taken
+> make_customer,customer1,tom,cruise,111-111-1111,5,1000,9,9 [TIMESTAMP: 16 min (Day 0, 00:16AM)]
+OK:change_completed
+> make_customer,customer2,henry,cavill,222-222-2222,5,1000,9,9 [TIMESTAMP: 18 min (Day 0, 00:18AM)]
+ERROR:location_already_taken
+> make_customer,customer2,henry,cavill,222-222-2222,5,1000,9,0 [TIMESTAMP: 19 min (Day 0, 00:19AM)]
+OK:change_completed
+> make_customer,customer3,aubrey,graham,333-333-3333,5,1000,9,0 [TIMESTAMP: 21 min (Day 0, 00:21AM)]
+ERROR:location_already_taken
+> make_customer,customer3,aubrey,graham,333-333-3333,5,1000,0,9 [TIMESTAMP: 22 min (Day 0, 00:22AM)]
+OK:change_completed
+> start_order,publix,order1,drone1,customer1 [TIMESTAMP: 24 min (Day 0, 00:24AM)]
+OK:change_completed
+> request_item,publix,order1,cake,1,10 [TIMESTAMP: 29 min (Day 0, 00:29AM)]
+OK:change_completed
+> start_order,publix,order2,drone1,customer2 [TIMESTAMP: 36 min (Day 0, 00:36AM)]
+OK:change_completed
+> request_item,publix,order2,cake,1,7 [TIMESTAMP: 41 min (Day 0, 00:41AM)]
+OK:change_completed
+> start_order,publix,order3,drone1,customer3 [TIMESTAMP: 48 min (Day 0, 00:48AM)]
+OK:change_completed
+> request_item,publix,order3,cake,1,20 [TIMESTAMP: 53 min (Day 0, 00:53AM)]
+OK:change_completed
+> // Display orders [TIMESTAMP: 60 min (Day 0, 01:00AM)]
+> display_orders,publix [TIMESTAMP: 60 min (Day 0, 01:00AM)]
+orderID:order1
+item_name:cake,total_quantity:1,total_cost:10,total_weight:5
+orderID:order2
+item_name:cake,total_quantity:1,total_cost:7,total_weight:5
+orderID:order3
+item_name:cake,total_quantity:1,total_cost:20,total_weight:5
+OK:display_completed
+> // Display drone status [TIMESTAMP: 63 min (Day 0, 01:03AM)]
+> display_drones,publix [TIMESTAMP: 63 min (Day 0, 01:03AM)]
+droneID:drone1,total_cap:20,num_orders:3,remaining_cap:5,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,0)
+OK:display_completed
+> // Drone delivers first order [TIMESTAMP: 64 min (Day 0, 01:04AM)]
+> purchase_order,publix,order1 [TIMESTAMP: 64 min (Day 0, 01:04AM)]
+OK:change_completed
+> display_drones,publix [TIMESTAMP: 306 min (Day 0, 05:06AM)]
+droneID:drone1,total_cap:20,num_orders:2,remaining_cap:10,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:0c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(9,9)
+OK:display_completed
+> // Drone delivers second order [TIMESTAMP: 307 min (Day 0, 05:07AM)]
+> purchase_order,publix,order2 [TIMESTAMP: 307 min (Day 0, 05:07AM)]
+OK:change_completed
+> display_drones,publix [TIMESTAMP: 558 min (Day 0, 09:18AM)]
+droneID:drone1,total_cap:20,num_orders:1,remaining_cap:15,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:0c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(9,0)
+OK:display_completed
+> // Pilot delivers third order [TIMESTAMP: 559 min (Day 0, 09:19AM)]
+> purchase_order,publix,order3 [TIMESTAMP: 559 min (Day 0, 09:19AM)]
+OK:change_completed
+> display_drones,publix [TIMESTAMP: 814 min (Day 0, 01:34PM)]
+droneID:drone1,total_cap:20,num_orders:0,remaining_cap:20,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:0c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+OK:display_completed
+> display_pilots,publix [TIMESTAMP: 815 min (Day 0, 01:35PM)]
+name:rocky_balboa,phone:999-999-9999,taxID:999-99-9999,licenseID:rb1234,experience:3
+OK:display_completed
+> display_efficiency [TIMESTAMP: 816 min (Day 0, 01:36PM)]
+name:publix,purchases:3,overloads:3,transfers:0,penalties:2,penalties_cost:5
+OK:display_completed
+> // Make drone 2 [TIMESTAMP: 817 min (Day 0, 01:37PM)]
+> make_pilot,pilot2,terminator,T-850,444-444-4444,444-44-4444,t850,0 [TIMESTAMP: 817 min (Day 0, 01:37PM)]
+OK:change_completed
+> make_drone,publix,drone2,20,1000,10,100 [TIMESTAMP: 820 min (Day 0, 01:40PM)]
+OK:change_completed
+> fly_drone,publix,drone2,pilot2 [TIMESTAMP: 823 min (Day 0, 01:43PM)]
+OK:change_completed
+> sell_item,publix,bagel,3 [TIMESTAMP: 827 min (Day 0, 01:47PM)]
+OK:change_completed
+> start_order,publix,order4,drone2,customer1 [TIMESTAMP: 830 min (Day 0, 01:50PM)]
+OK:change_completed
+> request_item,publix,order4,bagel,1,5 [TIMESTAMP: 835 min (Day 0, 01:55PM)]
+OK:change_completed
+> start_order,publix,order5,drone2,customer2 [TIMESTAMP: 842 min (Day 0, 02:02PM)]
+OK:change_completed
+> request_item,publix,order5,bagel,1,8 [TIMESTAMP: 847 min (Day 0, 02:07PM)]
+OK:change_completed
+> start_order,publix,order6,drone2,customer3 [TIMESTAMP: 854 min (Day 0, 02:14PM)]
+OK:change_completed
+> request_item,publix,order6,bagel,1,3 [TIMESTAMP: 859 min (Day 0, 02:19PM)]
+OK:change_completed
+> display_orders,publix [TIMESTAMP: 866 min (Day 0, 02:26PM)]
+orderID:order4
+item_name:bagel,total_quantity:1,total_cost:5,total_weight:3
+orderID:order5
+item_name:bagel,total_quantity:1,total_cost:8,total_weight:3
+orderID:order6
+item_name:bagel,total_quantity:1,total_cost:3,total_weight:3
+OK:display_completed
+> display_drones,publix [TIMESTAMP: 869 min (Day 0, 02:29PM)]
+droneID:drone1,total_cap:20,num_orders:0,remaining_cap:20,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:512c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+droneID:drone2,total_cap:20,num_orders:3,remaining_cap:11,flown_by:terminator_T-850,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,0)
+OK:display_completed
+> // Drone 2 delivers order 6 while drone 1 recharges [TIMESTAMP: 871 min (Day 0, 02:31PM)]
+> purchase_order,publix,order6 [TIMESTAMP: 871 min (Day 0, 02:31PM)]
+OK:change_completed
+> // Note that drone 1 has more charge than it did before because it was sitting idle and charging [TIMESTAMP: 961 min (Day 0, 04:01PM)]
+> display_drones,publix [TIMESTAMP: 961 min (Day 0, 04:01PM)]
+droneID:drone1,total_cap:20,num_orders:0,remaining_cap:20,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+droneID:drone2,total_cap:20,num_orders:2,remaining_cap:14,flown_by:terminator_T-850,fuel_cap:1000c,remaining_fuel:100c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+OK:display_completed
+> purchase_order,publix,order4 [TIMESTAMP: 963 min (Day 0, 04:03PM)]
+OK:change_completed
+> display_drones,publix [TIMESTAMP: 1181 min (Day 0, 07:41PM)]
+droneID:drone1,total_cap:20,num_orders:0,remaining_cap:20,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+droneID:drone2,total_cap:20,num_orders:1,remaining_cap:17,flown_by:terminator_T-850,fuel_cap:1000c,remaining_fuel:0c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(9,9)
+OK:display_completed
+> purchase_order,publix,order5 [TIMESTAMP: 1183 min (Day 0, 07:43PM)]
+OK:change_completed
+> // Note time has advanced into the next day [TIMESTAMP: 1888 min (Day 1, 07:28AM)]
+> display_drones,publix [TIMESTAMP: 1888 min (Day 1, 07:28AM)]
+droneID:drone1,total_cap:20,num_orders:0,remaining_cap:20,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+droneID:drone2,total_cap:20,num_orders:0,remaining_cap:20,flown_by:terminator_T-850,fuel_cap:1000c,remaining_fuel:0c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(9,0)
+OK:display_completed
+> display_pilots,publix [TIMESTAMP: 1890 min (Day 1, 07:30AM)]
+name:rocky_balboa,phone:999-999-9999,taxID:999-99-9999,licenseID:rb1234,experience:3
+name:terminator_T-850,phone:444-444-4444,taxID:444-44-4444,licenseID:t850,experience:3
+OK:display_completed
+> display_efficiency [TIMESTAMP: 1892 min (Day 1, 07:32AM)]
+name:publix,purchases:6,overloads:6,transfers:0,penalties:4,penalties_cost:7
+OK:display_completed
+> // Lets create a drone with different max fuel [TIMESTAMP: 1893 min (Day 1, 07:33AM)]
+> make_pilot,pilot3,John,McClane,555-555-5555,555-55-5555,jm1,0 [TIMESTAMP: 1893 min (Day 1, 07:33AM)]
+OK:change_completed
+> make_drone,publix,drone3,10,10000,10,100 [TIMESTAMP: 1896 min (Day 1, 07:36AM)]
+OK:change_completed
+> fly_drone,publix,drone3,pilot3 [TIMESTAMP: 1899 min (Day 1, 07:39AM)]
+OK:change_completed
+> sell_item,publix,apple,2 [TIMESTAMP: 1903 min (Day 1, 07:43AM)]
+OK:change_completed
+> start_order,publix,order7,drone3,customer3 [TIMESTAMP: 1906 min (Day 1, 07:46AM)]
+OK:change_completed
+> request_item,publix,order7,apple,2,4 [TIMESTAMP: 1911 min (Day 1, 07:51AM)]
+OK:change_completed
+> purchase_order,publix,order7 [TIMESTAMP: 1918 min (Day 1, 07:58AM)]
+OK:change_completed
+> display_drones,publix [TIMESTAMP: 2008 min (Day 1, 09:28AM)]
+droneID:drone1,total_cap:20,num_orders:0,remaining_cap:20,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+droneID:drone2,total_cap:20,num_orders:0,remaining_cap:20,flown_by:terminator_T-850,fuel_cap:1000c,remaining_fuel:957c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(9,0)
+droneID:drone3,total_cap:10,num_orders:0,remaining_cap:10,flown_by:John_McClane,fuel_cap:10000c,remaining_fuel:9100c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+OK:display_completed
+> display_pilots,publix [TIMESTAMP: 2011 min (Day 1, 09:31AM)]
+name:rocky_balboa,phone:999-999-9999,taxID:999-99-9999,licenseID:rb1234,experience:3
+name:terminator_T-850,phone:444-444-4444,taxID:444-44-4444,licenseID:t850,experience:3
+name:John_McClane,phone:555-555-5555,taxID:555-55-5555,licenseID:jm1,experience:1
+OK:display_completed
+> // Lets create a drone with different recharge rate [TIMESTAMP: 2014 min (Day 1, 09:34AM)]
+> make_pilot,pilot4,Tony,Montana,666-666-6666,666-66-6666,tonym,0 [TIMESTAMP: 2014 min (Day 1, 09:34AM)]
+OK:change_completed
+> make_drone,publix,drone4,10,1000,3,100 [TIMESTAMP: 2017 min (Day 1, 09:37AM)]
+OK:change_completed
+> fly_drone,publix,drone4,pilot4 [TIMESTAMP: 2020 min (Day 1, 09:40AM)]
+OK:change_completed
+> sell_item,publix,sugar,10 [TIMESTAMP: 2024 min (Day 1, 09:44AM)]
+OK:change_completed
+> start_order,publix,order8,drone4,customer1 [TIMESTAMP: 2027 min (Day 1, 09:47AM)]
+OK:change_completed
+> request_item,publix,order8,sugar,1,15 [TIMESTAMP: 2032 min (Day 1, 09:52AM)]
+OK:change_completed
+> purchase_order,publix,order8 [TIMESTAMP: 2039 min (Day 1, 09:59AM)]
+OK:change_completed
+> display_drones,publix [TIMESTAMP: 2250 min (Day 1, 01:30PM)]
+droneID:drone1,total_cap:20,num_orders:0,remaining_cap:20,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+droneID:drone2,total_cap:20,num_orders:0,remaining_cap:20,flown_by:terminator_T-850,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(9,0)
+droneID:drone3,total_cap:10,num_orders:0,remaining_cap:10,flown_by:John_McClane,fuel_cap:10000c,remaining_fuel:10000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+droneID:drone4,total_cap:10,num_orders:0,remaining_cap:10,flown_by:Tony_Montana,fuel_cap:1000c,remaining_fuel:0c,refuel_rate:3c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(9,9)
+OK:display_completed
+> display_pilots,publix [TIMESTAMP: 2254 min (Day 1, 01:34PM)]
+name:rocky_balboa,phone:999-999-9999,taxID:999-99-9999,licenseID:rb1234,experience:3
+name:terminator_T-850,phone:444-444-4444,taxID:444-44-4444,licenseID:t850,experience:3
+name:John_McClane,phone:555-555-5555,taxID:555-55-5555,licenseID:jm1,experience:1
+name:Tony_Montana,phone:666-666-6666,taxID:666-66-6666,licenseID:tonym,experience:1
+OK:display_completed
+> // Lets create a drone with different fuel consumption rate [TIMESTAMP: 2258 min (Day 1, 01:38PM)]
+> make_pilot,pilot5,Harry,Potter,777-777-7777,777-77-7777,hptbhl,0 [TIMESTAMP: 2258 min (Day 1, 01:38PM)]
+OK:change_completed
+> make_drone,publix,drone5,10,1000,10,200 [TIMESTAMP: 2261 min (Day 1, 01:41PM)]
+OK:change_completed
+> fly_drone,publix,drone5,pilot5 [TIMESTAMP: 2264 min (Day 1, 01:44PM)]
+OK:change_completed
+> sell_item,publix,taffy,1 [TIMESTAMP: 2268 min (Day 1, 01:48PM)]
+OK:change_completed
+> start_order,publix,order9,drone5,customer2 [TIMESTAMP: 2271 min (Day 1, 01:51PM)]
+OK:change_completed
+> request_item,publix,order9,taffy,5,1 [TIMESTAMP: 2276 min (Day 1, 01:56PM)]
+OK:change_completed
+> purchase_order,publix,order9 [TIMESTAMP: 2283 min (Day 1, 02:03PM)]
+OK:change_completed
+> display_drones,publix [TIMESTAMP: 2476 min (Day 1, 05:16PM)]
+droneID:drone1,total_cap:20,num_orders:0,remaining_cap:20,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+droneID:drone2,total_cap:20,num_orders:0,remaining_cap:20,flown_by:terminator_T-850,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(9,0)
+droneID:drone3,total_cap:10,num_orders:0,remaining_cap:10,flown_by:John_McClane,fuel_cap:10000c,remaining_fuel:10000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+droneID:drone4,total_cap:10,num_orders:0,remaining_cap:10,flown_by:Tony_Montana,fuel_cap:1000c,remaining_fuel:678c,refuel_rate:3c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(9,9)
+droneID:drone5,total_cap:10,num_orders:0,remaining_cap:10,flown_by:Harry_Potter,fuel_cap:1000c,remaining_fuel:0c,refuel_rate:10c/min,fuel_consumption_rate:200c/d,speed:1d/10min,location:(9,0)
+OK:display_completed
+> display_pilots,publix [TIMESTAMP: 2481 min (Day 1, 05:21PM)]
+name:rocky_balboa,phone:999-999-9999,taxID:999-99-9999,licenseID:rb1234,experience:3
+name:terminator_T-850,phone:444-444-4444,taxID:444-44-4444,licenseID:t850,experience:3
+name:John_McClane,phone:555-555-5555,taxID:555-55-5555,licenseID:jm1,experience:1
+name:Tony_Montana,phone:666-666-6666,taxID:666-66-6666,licenseID:tonym,experience:1
+name:Harry_Potter,phone:777-777-7777,taxID:777-77-7777,licenseID:hptbhl,experience:1
+OK:display_completed
+> // Create more customers to have shorter distances to travel to [TIMESTAMP: 2486 min (Day 1, 05:26PM)]
+> make_customer,customer4,bat,man,888-888-8888,5,1000000000,4,4 [TIMESTAMP: 2486 min (Day 1, 05:26PM)]
+OK:change_completed
+> make_customer,customer5,super,man,123-123-1234,5,5000,7,5 [TIMESTAMP: 2488 min (Day 1, 05:28PM)]
+OK:change_completed
+> make_customer,customer6,spider,man,122-233-3456,5,2000,5,7 [TIMESTAMP: 2490 min (Day 1, 05:30PM)]
+OK:change_completed
+> start_order,publix,order10,drone1,customer4 [TIMESTAMP: 2492 min (Day 1, 05:32PM)]
+OK:change_completed
+> request_item,publix,order10,apple,2,3 [TIMESTAMP: 2497 min (Day 1, 05:37PM)]
+OK:change_completed
+> start_order,publix,order11,drone4,customer5 [TIMESTAMP: 2504 min (Day 1, 05:44PM)]
+OK:change_completed
+> request_item,publix,order11,cake,1,10 [TIMESTAMP: 2509 min (Day 1, 05:49PM)]
+OK:change_completed
+> start_order,publix,order12,drone5,customer6 [TIMESTAMP: 2516 min (Day 1, 05:56PM)]
+OK:change_completed
+> request_item,publix,order12,bagel,2,5 [TIMESTAMP: 2521 min (Day 1, 06:01PM)]
+OK:change_completed
+> purchase_order,publix,order10 [TIMESTAMP: 2528 min (Day 1, 06:08PM)]
+OK:change_completed
+> purchase_order,publix,order11 [TIMESTAMP: 2588 min (Day 1, 07:08PM)]
+OK:change_completed
+> purchase_order,publix,order12 [TIMESTAMP: 2628 min (Day 1, 07:48PM)]
+OK:change_completed
+> display_drones,publix [TIMESTAMP: 3301 min (Day 2, 07:01AM)]
+droneID:drone1,total_cap:20,num_orders:0,remaining_cap:20,flown_by:rocky_balboa,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(4,4)
+droneID:drone2,total_cap:20,num_orders:0,remaining_cap:20,flown_by:terminator_T-850,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(9,0)
+droneID:drone3,total_cap:10,num_orders:0,remaining_cap:10,flown_by:John_McClane,fuel_cap:10000c,remaining_fuel:10000c,refuel_rate:10c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(0,9)
+droneID:drone4,total_cap:10,num_orders:0,remaining_cap:10,flown_by:Tony_Montana,fuel_cap:1000c,remaining_fuel:1000c,refuel_rate:3c/min,fuel_consumption_rate:100c/d,speed:1d/10min,location:(7,5)
+droneID:drone5,total_cap:10,num_orders:0,remaining_cap:10,flown_by:Harry_Potter,fuel_cap:1000c,remaining_fuel:0c,refuel_rate:10c/min,fuel_consumption_rate:200c/d,speed:1d/10min,location:(5,7)
+OK:display_completed
+> display_pilots,publix [TIMESTAMP: 3306 min (Day 2, 07:06AM)]
+name:rocky_balboa,phone:999-999-9999,taxID:999-99-9999,licenseID:rb1234,experience:4
+name:terminator_T-850,phone:444-444-4444,taxID:444-44-4444,licenseID:t850,experience:3
+name:John_McClane,phone:555-555-5555,taxID:555-55-5555,licenseID:jm1,experience:1
+name:Tony_Montana,phone:666-666-6666,taxID:666-66-6666,licenseID:tonym,experience:2
+name:Harry_Potter,phone:777-777-7777,taxID:777-77-7777,licenseID:hptbhl,experience:2
+OK:display_completed
+> display_efficiency [TIMESTAMP: 3311 min (Day 2, 07:11AM)]
+name:publix,purchases:12,overloads:6,transfers:0,penalties:6,penalties_cost:10
+OK:display_completed
+> display_customers [TIMESTAMP: 3312 min (Day 2, 07:12AM)]
+name:tom_cruise,phone:111-111-1111,rating:5,credit:971,location:(9,9)
+name:henry_cavill,phone:222-222-2222,rating:5,credit:983,location:(9,0)
+name:aubrey_graham,phone:333-333-3333,rating:5,credit:973,location:(0,9)
+name:bat_man,phone:888-888-8888,rating:5,credit:999999994,location:(4,4)
+name:super_man,phone:123-123-1234,rating:5,credit:4990,location:(7,5)
+name:spider_man,phone:122-233-3456,rating:5,credit:1992,location:(5,7)
+OK:display_completed
+> stop [TIMESTAMP: 3318 min (Day 2, 07:18AM)]
+stop acknowledged
+simulation terminated
