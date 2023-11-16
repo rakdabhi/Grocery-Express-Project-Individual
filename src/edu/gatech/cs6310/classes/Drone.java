@@ -225,15 +225,15 @@ public class Drone {
             int idleTime = -1;
 
             // if more light is emitted during the span of the refuel rate time than the minimum amount of light needed to cover distance
-            System.out.println("2. Delta: " + (minLightNeeded/this.refuelRate) + ", Light over Delta: " + Clock.getInstance().getLightOverDelta(minLightNeeded / this.refuelRate));
+            System.out.println("2. Delta: " + (Math.ceilDiv(minLightNeeded, this.refuelRate)) + ", Light over Delta: " + Clock.getInstance().getLightOverDelta(minLightNeeded / this.refuelRate));
             if (minLightNeeded <= Clock.getInstance().getLightOverDelta(minLightNeeded / this.refuelRate)) {
-                idleTime = minLightNeeded / this.refuelRate;
+                idleTime = Math.ceilDiv(minLightNeeded, this.refuelRate);
                 System.out.println("CASE 2.1: time increment - " + idleTime);
 
             // if less light is emitted than the refuel rate time
             } else {
                 int startTime = Clock.getInstance().getTime();
-                int endTime = Clock.getEndTime(minLightNeeded, startTime, minLightNeeded / this.refuelRate);
+                int endTime = Clock.getEndTime(minLightNeeded, startTime, Math.ceilDiv(minLightNeeded, this.refuelRate));
                 idleTime = endTime - startTime;
                 System.out.println("CASE 2.2: time increment - " + idleTime);
             }
@@ -247,15 +247,15 @@ public class Drone {
             int idleTime = -1;
 
             // if more light is emitted during the span of the refuel rate time than the amount of light needed for a full charge
-            System.out.println("3. Delta: " + (fuelForFullCharge/this.refuelRate) + ", Light over Delta: " + Clock.getInstance().getLightOverDelta(fuelForFullCharge / this.refuelRate));
+            System.out.println("3. Delta: " + (Math.ceilDiv(fuelForFullCharge, this.refuelRate)) + ", Light over Delta: " + Clock.getInstance().getLightOverDelta(fuelForFullCharge / this.refuelRate));
             if (fuelForFullCharge <= Clock.getInstance().getLightOverDelta(fuelForFullCharge / this.refuelRate)) {
-                idleTime = fuelForFullCharge / this.refuelRate;
+                idleTime = Math.ceilDiv(fuelForFullCharge, this.refuelRate);
                 System.out.println("CASE 3.1: time - " + idleTime);
 
             // if less light is emitted than the refuel rate time
             } else {
                 int startTime = Clock.getInstance().getTime();
-                int endTime = Clock.getEndTime(fuelForFullCharge, startTime, fuelForFullCharge / this.refuelRate);
+                int endTime = Clock.getEndTime(fuelForFullCharge, startTime, Math.ceilDiv(fuelForFullCharge, this.refuelRate));
                 idleTime = endTime - startTime;
                 System.out.println("CASE 3.2: time - " + idleTime);
             }
