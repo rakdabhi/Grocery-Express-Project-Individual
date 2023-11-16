@@ -186,13 +186,13 @@ public class Drone {
         // sets a reasonable delivery time to 2 * delivery time (time to cover distance at default speed without factoring sitting idle to recharge)
         order.setReasonableDeliveryTime((int) (2 * ((distance / this.speed) * 10)));
 
-        System.out.println("Curr Location: " + this.location.toString() + ", Dest Location: " + order.getDestination().toString());
+        // System.out.println("Curr Location: " + this.location.toString() + ", Dest Location: " + order.getDestination().toString());
         travelDistance(distance); // drone travels the distance to delivery order
 
         int deliveryTime = Clock.getInstance().getTime() - deliveryStartTime; // tracks delivery time of order
         order.setActualDeliveryTime(deliveryTime); // sets delivery time of order
-        System.out.println("Reasonable Delivery Time: " + order.getReasonableDeliveryTime() +
-                ", Actual Delivery Time: " + order.getActualDeliveryTime());
+        // System.out.println("Reasonable Delivery Time: " + order.getReasonableDeliveryTime() +
+        //        ", Actual Delivery Time: " + order.getActualDeliveryTime());
         this.lastChargeUpdate = Clock.getInstance().getTime();
         this.location = order.getDestination();
         this.pilot.incrementExperience();
@@ -209,13 +209,13 @@ public class Drone {
      */
     private void travelDistance(double distance) {
         int requiredFuel = (int) Math.round(distance * this.fuelConsumptionRate);
-        System.out.println("Distance: " + distance + ", Curr Fuel: " + this.remainingFuel
-                + ", Required Fuel: " + requiredFuel + ", Time: " + Clock.getInstance().getTime());
+        // System.out.println("Distance: " + distance + ", Curr Fuel: " + this.remainingFuel
+        //         + ", Required Fuel: " + requiredFuel + ", Time: " + Clock.getInstance().getTime());
 
         // When the drone has enough remaining fuel to cover the distance
         if (this.remainingFuel >= requiredFuel) {
             this.remainingFuel -= requiredFuel;
-            System.out.println("CASE 1: time increment - " + ((int) (distance / this.speed) * 10));
+            // System.out.println("CASE 1: time increment - " + ((int) (distance / this.speed) * 10));
             Clock.getInstance().incrementTime((int) (distance / this.speed) * 10); // Time it takes to cover distance required
 
         // When the drone can wait at its current place until it's battery has filled enough to cover the distance
@@ -225,17 +225,17 @@ public class Drone {
             int idleTime = -1;
 
             // if more light is emitted during the span of the refuel rate time than the minimum amount of light needed to cover distance
-            System.out.println("2. Delta: " + (Math.ceilDiv(minLightNeeded, this.refuelRate)) + ", Light over Delta: " + Clock.getInstance().getLightOverDelta(minLightNeeded / this.refuelRate));
+            // System.out.println("2. Delta: " + (Math.ceilDiv(minLightNeeded, this.refuelRate)) + ", Light over Delta: " + Clock.getInstance().getLightOverDelta(minLightNeeded / this.refuelRate));
             if (minLightNeeded <= Clock.getInstance().getLightOverDelta(minLightNeeded / this.refuelRate)) {
                 idleTime = Math.ceilDiv(minLightNeeded, this.refuelRate);
-                System.out.println("CASE 2.1: time increment - " + idleTime);
+                // System.out.println("CASE 2.1: time increment - " + idleTime);
 
             // if less light is emitted than the refuel rate time
             } else {
                 int startTime = Clock.getInstance().getTime();
                 int endTime = Clock.getEndTime(minLightNeeded, startTime, Math.ceilDiv(minLightNeeded, this.refuelRate));
                 idleTime = endTime - startTime;
-                System.out.println("CASE 2.2: time increment - " + idleTime);
+                // System.out.println("CASE 2.2: time increment - " + idleTime);
             }
             Clock.getInstance().incrementTime(idleTime); // time to charge battery just enough to cover distance
             this.remainingFuel = requiredFuel; // battery is full enough to cover distance
@@ -247,17 +247,17 @@ public class Drone {
             int idleTime = -1;
 
             // if more light is emitted during the span of the refuel rate time than the amount of light needed for a full charge
-            System.out.println("3. Delta: " + (Math.ceilDiv(fuelForFullCharge, this.refuelRate)) + ", Light over Delta: " + Clock.getInstance().getLightOverDelta(fuelForFullCharge / this.refuelRate));
+            // System.out.println("3. Delta: " + (Math.ceilDiv(fuelForFullCharge, this.refuelRate)) + ", Light over Delta: " + Clock.getInstance().getLightOverDelta(fuelForFullCharge / this.refuelRate));
             if (fuelForFullCharge <= Clock.getInstance().getLightOverDelta(fuelForFullCharge / this.refuelRate)) {
                 idleTime = Math.ceilDiv(fuelForFullCharge, this.refuelRate);
-                System.out.println("CASE 3.1: time - " + idleTime);
+                // System.out.println("CASE 3.1: time - " + idleTime);
 
             // if less light is emitted than the refuel rate time
             } else {
                 int startTime = Clock.getInstance().getTime();
                 int endTime = Clock.getEndTime(fuelForFullCharge, startTime, Math.ceilDiv(fuelForFullCharge, this.refuelRate));
                 idleTime = endTime - startTime;
-                System.out.println("CASE 3.2: time - " + idleTime);
+                // System.out.println("CASE 3.2: time - " + idleTime);
             }
             Clock.getInstance().incrementTime(idleTime); // Time to fully charge battery
             this.remainingFuel = this.fuelCapacity; // battery is now fully charged
