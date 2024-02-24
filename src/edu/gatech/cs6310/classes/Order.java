@@ -11,6 +11,8 @@ public class Order {
     private Map<String, Line> items;
     private int orderCost;
     private int orderWeight;
+    private int reasonableDeliveryTime;
+    private int actualDeliveryTime;
 
     public Order(String orderID, Customer customer, Store store, Drone drone) {
         this.orderID = orderID;
@@ -20,6 +22,8 @@ public class Order {
         this.items = new TreeMap<String, Line>();
         this.orderCost = 0;
         this.orderWeight = 0;
+        this.reasonableDeliveryTime = -1;
+        this.actualDeliveryTime = -1;
     }
 
     public String getOrderID() {
@@ -32,6 +36,9 @@ public class Order {
 
     public Customer getCustomer() {
         return this.customer;
+    }
+    public Location getDestination() {
+        return this.customer.getLocation();
     }
 
     public String getStoreID() {
@@ -60,6 +67,21 @@ public class Order {
 
     public int getOrderWeight() {
         return this.orderWeight;
+    }
+    public int getReasonableDeliveryTime() {
+        return this.reasonableDeliveryTime;
+    }
+
+    public void setReasonableDeliveryTime(int reasonableDeliveryTime) {
+        this.reasonableDeliveryTime = reasonableDeliveryTime;
+    }
+
+    public int getActualDeliveryTime() {
+        return this.actualDeliveryTime;
+    }
+
+    public void setActualDeliveryTime(int actualDeliveryTime) {
+        this.actualDeliveryTime = actualDeliveryTime;
     }
 
     public boolean containsItem(String itemID) {

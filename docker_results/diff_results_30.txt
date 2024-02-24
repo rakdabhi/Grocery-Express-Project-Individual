@@ -1,2 +1,0 @@
-Files drone_delivery_30_results.txt and drone_delivery_initial_30_results.txt are identical
-Elapsed time: 1.625s

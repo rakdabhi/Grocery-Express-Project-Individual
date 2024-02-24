@@ -9,12 +9,29 @@ public class DeliveryService {
     private Map<String, Employee> employees = new TreeMap<String, Employee>();
     private Set<String> employeeUniques = new HashSet<String>();
     private Map<String, Customer> customers = new TreeMap<String, Customer>();
+    private Clock clock = Clock.getInstance();
+    private ServiceMap map = ServiceMap.getInstance();
+
+    // a map of how much time it takes to execute each function based on the number of error checks it does
+    private Map<String, Integer> commandTimeMap = new HashMap<String, Integer>() {{
+        put("make_store", 2);
+        put("sell_item", 3);
+        put("make_pilot", 3);
+        put("make_drone", 3);
+        put("fly_drone", 4);
+        put("make_customer", 2);
+        put("start_order", 5);
+        put("request_item", 7);
+        put("cancel_order", 3);
+        put("transfer_order", 6);
+    }};
 
     public void commandLoop() {
         Scanner commandLineInput = new Scanner(System.in);
         String wholeInputLine;
         String[] tokens;
         final String DELIMITER = ",";
+        boolean isSuccessful = false;
 
         label:
         while (true) {
@@ -22,12 +39,17 @@ public class DeliveryService {
                 // Determine the next command and echo it to the monitor for testing purposes
                 wholeInputLine = commandLineInput.nextLine();
                 tokens = wholeInputLine.split(DELIMITER);
-                System.out.println("> " + wholeInputLine);
+                System.out.println("> " + wholeInputLine + " " + clock.toString());
 
                 switch (tokens[0]) {
                     case "make_store":
                         // System.out.println("store: " + tokens[1] + ", revenue: " + tokens[2]);
-                        make_store(tokens[1], tokens[2]);
+                        // xCoordinate = tokens[3], yCoordinate = tokens[4]
+                        if (tokens.length == 3) {
+                            isSuccessful = make_store(tokens[1], tokens[2]);
+                        } else if (tokens.length == 5) {
+                            isSuccessful = make_store(tokens[1], tokens[2], tokens[3], tokens[4]);
+                        }
                         break;
 
                     case "display_stores":
@@ -37,7 +59,7 @@ public class DeliveryService {
 
                     case "sell_item":
                         // System.out.println("store: " + tokens[1] + ", item: " + tokens[2] + ", weight: " + tokens[3]);
-                        sell_item(tokens[1], tokens[2], tokens[3]);
+                        isSuccessful = sell_item(tokens[1], tokens[2], tokens[3]);
                         break;
 
                     case "display_items":
@@ -47,7 +69,7 @@ public class DeliveryService {
                     case "make_pilot":
                         // System.out.print("account: " + tokens[1] + ", first_name: " + tokens[2] + ", last_name: " + tokens[3]);
                         // System.out.println(", phone: " + tokens[4] + ", tax: " + tokens[5] + ", license: " + tokens[6] + ", experience: " + tokens[7]);
-                        make_pilot(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7]);
+                        isSuccessful = make_pilot(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7]);
                         break;
 
                     case "display_pilots":
@@ -57,7 +79,12 @@ public class DeliveryService {
 
                     case "make_drone":
                         // System.out.println("store: " + tokens[1] + ", drone: " + tokens[2] + ", capacity: " + tokens[3] + ", fuel: " + tokens[4]);
-                        make_drone(tokens[1], tokens[2], tokens[3], tokens[4]);
+                        // fuelCapacity = tokens[4], refuelRate = tokens[5], fuelConsumptionRate = tokens[6]
+                        if (tokens.length == 4 || tokens.length == 5) {
+                            isSuccessful = make_drone(tokens[1], tokens[2], tokens[3]);
+                        } else if (tokens.length == 7) {
+                            isSuccessful = make_drone(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]);
+                        }
                         break;
 
                     case "display_drones":
@@ -67,13 +94,18 @@ public class DeliveryService {
 
                     case "fly_drone":
                         // System.out.println("store: " + tokens[1] + ", drone: " + tokens[2] + ", pilot: " + tokens[3]);
-                        fly_drone(tokens[1], tokens[2], tokens[3]);
+                        isSuccessful = fly_drone(tokens[1], tokens[2], tokens[3]);
                         break;
 
                     case "make_customer":
                         // System.out.print("account: " + tokens[1] + ", first_name: " + tokens[2] + ", last_name: " + tokens[3]);
                         // System.out.println(", phone: " + tokens[4] + ", rating: " + tokens[5] + ", credit: " + tokens[6]);
-                        make_customer(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]);
+                        // xCoordinate = tokens[7], yCoordinate = tokens[8]
+                        if (tokens.length == 7) {
+                            isSuccessful = make_customer(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]);
+                        } else if (tokens.length == 9) {
+                            isSuccessful = make_customer(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7], tokens[8]);
+                        }
                         break;
 
                     case "display_customers":
@@ -83,7 +115,7 @@ public class DeliveryService {
 
                     case "start_order":
                         // System.out.println("store: " + tokens[1] + ", order: " + tokens[2] + ", drone: " + tokens[3] + ", customer: " + tokens[4]);
-                        start_order(tokens[1], tokens[2], tokens[3], tokens[4]);
+                        isSuccessful = start_order(tokens[1], tokens[2], tokens[3], tokens[4]);
                         break;
 
                     case "display_orders":
@@ -93,22 +125,22 @@ public class DeliveryService {
 
                     case "request_item":
                         // System.out.println("store: " + tokens[1] + ", order: " + tokens[2] + ", item: " + tokens[3] + ", quantity: " + tokens[4] + ", unit_price: " + tokens[5]);
-                        request_item(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]);
+                        isSuccessful = request_item(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]);
                         break;
 
                     case "purchase_order":
                         // System.out.println("store: " + tokens[1] + ", order: " + tokens[2]);
-                        purchase_order(tokens[1], tokens[2]);
+                        isSuccessful = purchase_order(tokens[1], tokens[2]);
                         break;
 
                     case "cancel_order":
                         // System.out.println("store: " + tokens[1] + ", order: " + tokens[2]);
-                        cancel_order(tokens[1], tokens[2]);
+                        isSuccessful = cancel_order(tokens[1], tokens[2]);
                         break;
 
                     case "transfer_order":
                         // System.out.println("store: " + tokens[1] + ", order: " + tokens[2] + ", new_drone: " + tokens[3]);
-                        transfer_order(tokens[1], tokens[2], tokens[3]);
+                        isSuccessful = transfer_order(tokens[1], tokens[2], tokens[3]);
                         break;
 
                     case "display_efficiency":
@@ -121,11 +153,21 @@ public class DeliveryService {
                         break label;
 
                     default:
-                        if (!tokens[0].substring(0,2).equals("//")) {
+                        if (!tokens[0].startsWith("//")) {
                             System.out.println("command " + tokens[0] + " NOT acknowledged");
                         }
                         break;
                 }
+
+                // Increments time on the clock based on the command and whether it was successful
+                if (commandTimeMap.containsKey(tokens[0])) {
+                    if (!isSuccessful) {
+                        clock.incrementTime(1);
+                    } else {
+                        clock.incrementTime(commandTimeMap.get(tokens[0]));
+                    }
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println();
@@ -140,17 +182,46 @@ public class DeliveryService {
      * Method to create a store if it doesn't exist
      * @param storeID - unique ID of store to create
      * @param revenue - revenue of store as an integer
+     * @param location - location of store in x,y coordinates
      * @return true if store is created, else false
      */
-    private boolean make_store(String storeID, String revenue) {
+    private boolean make_store(String storeID, String revenue, Location location) {
         if (stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_already_exists");
             return false;
         }
-        Store store = new Store(storeID, revenue);
+        if (map.locationExists(location)) {
+            System.out.println("ERROR:location_already_taken");
+            return false;
+        }
+        Store store = new Store(storeID, revenue, location);
+        map.addLocation(location, store);
         stores.put(store.getStoreID(), store);
         System.out.println("OK:change_completed");
         return true;
+    }
+
+    /**
+     * Method to create a store if it doesn't exist
+     * @param storeID - unique ID of store to create
+     * @param revenue - revenue of store as an integer
+     * @param x - x coordinate of store
+     * @param y - y coordinate of store
+     * @return true if store is created, else false
+     */
+    private boolean make_store(String storeID, String revenue, String x, String y) {
+        return this.make_store(storeID, revenue, new Location(x, y));
+    }
+
+    /**
+     * Method to create a store if it doesn't exist
+     * @param storeID - unique ID of store to create
+     * @param revenue - revenue of store as an integer
+     * @return true if store is created, else false
+     */
+    private boolean make_store(String storeID, String revenue) {
+        Location location = generateRandomLocation();
+        return this.make_store(storeID, revenue, location);
     }
 
     /**
@@ -160,6 +231,7 @@ public class DeliveryService {
         for (Map.Entry<String, Store> storeEntry : stores.entrySet()) {
             System.out.println(storeEntry.getValue().toString());
         }
+        clock.incrementTime(this.stores.size());
         System.out.println("OK:display_completed");
     }
 
@@ -226,6 +298,7 @@ public class DeliveryService {
         for (Map.Entry<String, Employee> employeeEntry : employees.entrySet()) {
             System.out.println(employeeEntry.getValue().toString());
         }
+        clock.incrementTime(this.employees.size());
         System.out.println("OK:display_completed");
     }
 
@@ -234,17 +307,42 @@ public class DeliveryService {
      * @param storeID - unique ID of store that drone works for
      * @param droneID - unique ID of the drone
      * @param weightCapacity - maximum weight drone can lift
-     * @param tripsCapacity - number of remaining trips that drone can take for delivery before needing to be refueled
+     * @param fuelCapacity - maximum fuel capacity of drone in units of charge (c)
+     * @param refuelRate - refuel rate of solar-powered drone in units of charge per minute (c/min)
+     * @param fuelConsumptionRate - rate of fuel consumption in units of charge per unit distance (c/d)
+     * NOTE: Charge has units 'c', Time has minute units 'min', and Distance has units 'd' so that:
+     *       Refuel Rate has units charge per minute 'c/min',
+     *       Fuel Consumption Rate has units charge per distance 'c/d'
+     *       Drone speed has units distance per 10 minutes '1d/10min'
      * @return true if drone is created, else false
      */
-    private boolean make_drone(String storeID, String droneID, String weightCapacity, String tripsCapacity) {
+    private boolean make_drone(String storeID, String droneID, String weightCapacity,
+                               String fuelCapacity, String refuelRate, String fuelConsumptionRate) {
         if (!stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_does_not_exist");
             return false;
         }
-        boolean storeCreated = stores.get(storeID).addDrone(droneID, weightCapacity,tripsCapacity);
-        if (storeCreated) System.out.println("OK:change_completed");
-        return storeCreated;
+        Store store = stores.get(storeID);
+        boolean droneCreated = store.addDrone(droneID, weightCapacity, fuelCapacity, refuelRate, fuelConsumptionRate);
+        if (droneCreated) System.out.println("OK:change_completed");
+        return droneCreated;
+    }
+
+    /**
+     * Creates a drone that will carry and deliver groceries for a particular store
+     * @param storeID - unique ID of store that drone works for
+     * @param droneID - unique ID of the drone
+     * @param weightCapacity - maximum weight drone can lift
+     * NOTE: default values:
+     * fuelCapacity = 1000c
+     * refuelRate = 10c/min
+     * fuelConsumptionRate = 100c/d
+     * speed = 1d/10min
+     * @return true if drone is created, else false
+     */
+    private boolean make_drone(String storeID, String droneID, String weightCapacity) {
+        return this.make_drone(storeID, droneID, weightCapacity,
+                "1000", "10", "100");
     }
 
     /**
@@ -264,19 +362,20 @@ public class DeliveryService {
      * @param storeID - unique ID of store where drone works
      * @param droneID - unique ID of the drone
      * @param pilotID - unique identifier for pilot
+     * @return true if pilot is successfully assigned to control a given drone
      */
-    private void fly_drone(String storeID, String droneID, String pilotID) {
+    private boolean fly_drone(String storeID, String droneID, String pilotID) {
         if (!stores.containsKey(storeID)) {
             System.out.println("ERROR:store_identifier_does_not_exist");
-            return;
+            return false;
         }
         if (!stores.get(storeID).containsDrone(droneID)) {
             System.out.println("ERROR:drone_identifier_does_not_exist");
-            return;
+            return false;
         }
         if (!employees.containsKey(pilotID)) {
             System.out.println("ERROR:pilot_identifier_does_not_exist");
-            return;
+            return false;
         }
 
         DronePilot pilot = (DronePilot) employees.get(pilotID);
@@ -293,7 +392,56 @@ public class DeliveryService {
             pilot.setDrone(drone);
             drone.setPilot(pilot);
             System.out.println("OK:change_completed");
+            return true;
         }
+        return false;
+    }
+
+    /**
+     * Creates a customer if they don't exist
+     * @param accountID - unique ID of customer
+     * @param firstName - first name of customer
+     * @param lastName - last name of customer
+     * @param phone - phone number of customer
+     * @param rating - rating of customer
+     * @param credit - credit/money that customer has available to spend on groceries
+     * @param location - location of customer in x,y coordinates
+     * @return true if customer is created, else false
+     */
+    private boolean make_customer(String accountID, String firstName, String lastName,
+                                  String phone, String rating, String credit,
+                                  Location location) {
+        if (customers.containsKey(accountID)) {
+            System.out.println("ERROR:customer_identifier_already_exists");
+            return false;
+        }
+        if (map.locationExists(location)) {
+            System.out.println("ERROR:location_already_taken");
+            return false;
+        }
+        Customer customer = new Customer(accountID, firstName, lastName, phone, rating, credit, location);
+        map.addLocation(location, customer);
+        customers.put(customer.getAccountID(), customer);
+        System.out.println("OK:change_completed");
+        return true;
+    }
+
+    /**
+     * Creates a customer if they don't exist
+     * @param accountID - unique ID of customer
+     * @param firstName - first name of customer
+     * @param lastName - last name of customer
+     * @param phone - phone number of customer
+     * @param rating - rating of customer
+     * @param credit - credit/money that customer has available to spend on groceries
+     * @param x - x coordinate of customer
+     * @param y - y coordinate of customer
+     * @return true if customer is created, else false
+     */
+    private boolean make_customer(String accountID, String firstName, String lastName,
+                                  String phone, String rating, String credit,
+                                  String x, String y) {
+        return this.make_customer(accountID, firstName, lastName, phone, rating, credit, new Location(x, y));
     }
 
     /**
@@ -308,14 +456,8 @@ public class DeliveryService {
      */
     private boolean make_customer(String accountID, String firstName, String lastName,
                                   String phone, String rating, String credit) {
-        if (customers.containsKey(accountID)) {
-            System.out.println("ERROR:customer_identifier_already_exists");
-            return false;
-        }
-        Customer customer = new Customer(accountID, firstName, lastName, phone, rating, credit);
-        customers.put(customer.getAccountID(), customer);
-        System.out.println("OK:change_completed");
-        return true;
+        Location location = generateRandomLocation();
+        return this.make_customer(accountID, firstName, lastName, phone, rating, credit, location);
     }
 
     /**
@@ -325,6 +467,7 @@ public class DeliveryService {
         for (Map.Entry<String, Customer> customerEntry : customers.entrySet()) {
             System.out.println(customerEntry.getValue().toString());
         }
+        clock.incrementTime(this.customers.size());
         System.out.println("OK:display_completed");
     }
 
@@ -474,6 +617,23 @@ public class DeliveryService {
         for (Map.Entry<String, Store> storeEntry : stores.entrySet()) {
             System.out.println(storeEntry.getValue().getEfficiency());
         }
+        clock.incrementTime(this.stores.size());
         System.out.println("OK:display_completed");
+    }
+
+    private Location generateRandomLocation() {
+        Location location;
+        int x,y;
+        int min = 0;
+        int max = 9;
+        for (int i = 0; i < 100; i++) {
+            x = (int)(Math.random()*((max-min)+1))+min;
+            y = (int)(Math.random()*((max-min)+1))+min;
+            location = new Location(x, y);
+            if (!map.locationExists(location)) {
+                return location;
+            }
+        }
+        return null;
     }
 }

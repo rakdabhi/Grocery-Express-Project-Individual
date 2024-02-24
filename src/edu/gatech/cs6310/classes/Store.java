@@ -9,24 +9,29 @@ public class Store {
     private Map<String, Item> items;
     private Map<String, Drone> drones;
     private Map<String, Order> orders;
-
+    private Location location;
     private int purchases;
     private int overloads;
     private int transfers;
+    private int penalties;
+    private int penaltiesCost;
 
-    public Store(String name, int revenue) {
+    public Store(String name, int revenue, Location location) {
         this.name = name;
         this.revenue = revenue;
         this.items = new TreeMap<String, Item>();
         this.drones = new TreeMap<String, Drone>();
         this.orders = new TreeMap<String, Order>();
+        this.location = location;
         this.purchases = 0;
         this.overloads = 0;
         this.transfers = 0;
+        this.penalties = 0;
+        this.penaltiesCost = 0;
     }
 
-    public Store(String name, String revenue) {
-        this(name, Integer.parseInt(revenue));
+    public Store(String name, String revenue, Location location) {
+        this(name, Integer.parseInt(revenue), location);
     }
 
     public String getStoreID() {
@@ -51,6 +56,10 @@ public class Store {
 
     public Item getItem(String itemID) {
         return items.get(itemID);
+    }
+
+    public Location getLocation() {
+        return this.location;
     }
 
     /**
@@ -87,6 +96,7 @@ public class Store {
         for (Map.Entry<String, Item> itemEntry : items.entrySet()) {
             System.out.println(itemEntry.getValue().toString());
         }
+        Clock.getInstance().incrementTime(this.items.size());
         System.out.println("OK:display_completed");
     }
 
@@ -94,15 +104,18 @@ public class Store {
      * Adds a drone for the store to use to deliver orders to their respective customers
      * @param droneID - unique ID of the drone
      * @param weightCapacity - maximum weight drone can lift
-     * @param tripsCapacity - number of remaining trips that drone can take for delivery before needing to be refueled
+     * @param fuelCapacity - maximum fuel capacity of drone in units of charge (c)
+     * @param refuelRate - refuel rate of solar-powered drone in units of charge per minute (c/min)
+     * @param fuelConsumptionRate - rate of fuel consumption in units of charge per unit distance (c/d)
      * @return true if drone is added, else false
      */
-    public boolean addDrone(String droneID, int weightCapacity, int tripsCapacity) {
+    public boolean addDrone(String droneID, int weightCapacity,
+                            int fuelCapacity, int refuelRate, int fuelConsumptionRate) {
         if (drones.containsKey(droneID)) {
             System.out.println("ERROR:drone_identifier_already_exists");
             return false;
         }
-        Drone drone = new Drone(droneID, weightCapacity,tripsCapacity);
+        Drone drone = new Drone(droneID, weightCapacity, fuelCapacity, refuelRate, fuelConsumptionRate, this.location);
         drones.put(drone.getDroneID(), drone);
         return true;
     }
@@ -111,11 +124,15 @@ public class Store {
      * Adds a drone for the store to use to deliver orders to their respective customers
      * @param droneID - unique ID of the drone as a string
      * @param weightCapacity - maximum weight drone can lift as a string
-     * @param tripsCapacity - number of remaining trips that drone can take for delivery before needing to be refueled as a string
+     * @param fuelCapacity - maximum fuel capacity of drone in units of charge (c)
+     * @param refuelRate - refuel rate of solar-powered drone in units of charge per minute (c/min)
+     * @param fuelConsumptionRate - rate of fuel consumption in units of charge per unit distance (c/d)
      * @return true if drone is added, else false
      */
-    public boolean addDrone(String droneID, String weightCapacity, String tripsCapacity) {
-        return addDrone(droneID, Integer.parseInt(weightCapacity), Integer.parseInt(tripsCapacity));
+    public boolean addDrone(String droneID, String weightCapacity,
+                            String fuelCapacity, String refuelRate, String fuelConsumptionRate) {
+        return addDrone(droneID, Integer.parseInt(weightCapacity),
+                        Integer.parseInt(fuelCapacity), Integer.parseInt(refuelRate), Integer.parseInt(fuelConsumptionRate));
     }
 
     /**
@@ -125,6 +142,7 @@ public class Store {
         for (Map.Entry<String, Drone> droneEntry : drones.entrySet()) {
             System.out.println(droneEntry.getValue().toString());
         }
+        Clock.getInstance().incrementTime(this.drones.size());
         System.out.println("OK:display_completed");
     }
 
@@ -204,10 +222,37 @@ public class Store {
         Drone drone = order.getDrone();
         boolean orderDelivered = drone.deliverOrder(order);
         if (orderDelivered && !drone.containsOrder(orderID)) {
+            checkDeliveryTime(order);
             this.overloads += drone.getOverloads();
             orders.remove(orderID);
         }
         return orderDelivered && !orders.containsKey(orderID);
+    }
+
+    /**
+     * Checks the delivery time of order and gives credit to customer if delivery time is unreasonable
+     * @param order - order to check delivery time
+     */
+    public void checkDeliveryTime(Order order) {
+        if (order.getReasonableDeliveryTime() < 0) {
+            System.out.println("ERROR:order_has_not_been_purchased");
+            return;
+        }
+        if (order.getActualDeliveryTime() < 0) {
+            System.out.println("ERROR:order_not_delivered_yet");
+            return;
+        }
+
+        // if order delivery took longer than the reasonable time expected,
+        // then store gives customer a discount of 20%, or the amount of revenue they have, whichever is min
+        if (order.getReasonableDeliveryTime() < order.getActualDeliveryTime()) {
+            Customer customer = order.getCustomer();
+            int discount = Math.min((int) (order.getOrderCost() * 0.2), this.revenue);
+            customer.giveCredit(discount);
+            this.revenue -= discount;
+            this.penalties += 1;
+            this.penaltiesCost += discount;
+        }
     }
 
     /**
@@ -249,6 +294,7 @@ public class Store {
         for (Map.Entry<String, Order> orderEntry : orders.entrySet()) {
             System.out.println(orderEntry.getValue().toString());
         }
+        Clock.getInstance().incrementTime(this.orders.size());
         System.out.println("OK:display_completed");
     }
 
@@ -294,7 +340,9 @@ public class Store {
         return "name:" + this.name +
               ",purchases:" + this.purchases +
               ",overloads:" + this.overloads +
-              ",transfers:" + this.transfers;
+              ",transfers:" + this.transfers +
+              ",penalties:" + this.penalties +
+              ",penalties_cost:" + this.penaltiesCost;
     }
 
     /**
@@ -303,7 +351,8 @@ public class Store {
      */
     @Override
     public String toString() {
-        return "name:" + this.name
-            + ",revenue:" + this.revenue;
+        return "name:" + this.name +
+               ",revenue:" + this.revenue +
+               ",location:" + this.location.toString();
     }
 }

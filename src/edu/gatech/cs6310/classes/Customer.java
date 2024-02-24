@@ -5,24 +5,33 @@ import java.util.TreeMap;
 
 public class Customer extends User {
     private Map<String, Order> orders;
+    private Location location;
     private int rating;
     private int credit;
     private int pendingCost;
 
-    public Customer(String accountID, String firstName, String lastName, String phone, int rating, int credit) {
+    public Customer(String accountID, String firstName, String lastName, String phone,
+                    int rating, int credit, Location location) {
         super(accountID, firstName, lastName, phone);
         this.orders = new TreeMap<String, Order>();
+        this.location = location;
         this.rating = rating;
         this.credit = credit;
         this.pendingCost = 0;
     }
 
-    public Customer(String accountID, String firstName, String lastName, String phone, String rating, String credit) {
-        this(accountID, firstName, lastName, phone, Integer.parseInt(rating), Integer.parseInt(credit));
+    public Customer(String accountID, String firstName, String lastName, String phone,
+                    String rating, String credit, Location location) {
+        this(accountID, firstName, lastName, phone,
+                Integer.parseInt(rating), Integer.parseInt(credit), location);
     }
 
     public boolean containsOrder(String orderID) {
         return orders.containsKey(orderID);
+    }
+
+    public Location getLocation() {
+        return this.location;
     }
 
     public int getPendingCost() {
@@ -173,6 +182,14 @@ public class Customer extends User {
     }
 
     /**
+     * Gives customer some credit if their order was not delivered in a reasonable time
+     * @param credit - amount of credit given by store
+     */
+    public void giveCredit(int credit) {
+        this.credit += credit;
+    }
+
+    /**
      * Customer cancels an order
      * @param storeID - unique ID of store to cancel order from
      * @param orderID - unique ID of order to cancel
@@ -205,6 +222,7 @@ public class Customer extends User {
         return "name:" + this.getFullName() +
               ",phone:" + this.phone +
               ",rating:" + this.rating +
-              ",credit:" + this.credit;
+              ",credit:" + this.credit +
+              ",location:" + this.location.toString();
     }
 }
